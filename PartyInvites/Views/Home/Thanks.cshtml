@@ -1,0 +1,29 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Thanks</title>
+</head>
+<body>
+    <div>
+        <h1>Thank you, @Model?.Name!</h1>
+        @if (Model?.WillAttend == true)
+        {
+            @:Great! I'm glad you can make it. The drinks are already in the fridge.
+        }
+        else
+        {
+            @:Sorry to hear you can't make it. I hope you can make the next one.
+        }
+    </div>
+    Click<a asp-action="ListResponses">here</a> to see who's coming.
+</body>
+</html>
