@@ -93,7 +93,11 @@ namespace SportsStore
 
             //app.MapGet("/", () => "Hello World!");
             app.UseStaticFiles();
+            app.MapControllerRoute("pagination",
+                "Products/Page{productPage}",
+                new { controller = "Home", action = "Index" });
             app.MapDefaultControllerRoute();
+
             await using (AsyncServiceScope serviceScope = app.Services.CreateAsyncScope())
             await using (StoreDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<StoreDbContext>())
             {

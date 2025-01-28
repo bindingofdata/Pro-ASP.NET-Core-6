@@ -11,11 +11,11 @@ namespace SportsStore.Infrastructure
     [HtmlTargetElement("div", Attributes = "page-model")]
     public sealed class PageLinkTagHelper : TagHelper
     {
-        private IUrlHelperFactory urlHelperFactory;
+        private IUrlHelperFactory _urlHelperFactory;
 
         public PageLinkTagHelper(IUrlHelperFactory helperFactory)
         {
-            urlHelperFactory = helperFactory;
+            _urlHelperFactory = helperFactory;
         }
 
         [ViewContext]
@@ -28,7 +28,7 @@ namespace SportsStore.Infrastructure
         {
             if (ViewContext != null && PageModel != null)
             {
-                IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+                IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
                 TagBuilder result = new TagBuilder("div");
                 for (int i = 1; i <= PageModel.TotalPages; i++)
                 {
