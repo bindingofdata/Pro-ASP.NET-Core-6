@@ -10,6 +10,7 @@ namespace SportsStore
         {
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllersWithViews();
+
             builder.Services.AddDbContext<StoreDbContext>(options =>
                 options.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"])
                 .UseAsyncSeeding(async (context, _, ct) =>
@@ -87,7 +88,10 @@ namespace SportsStore
                     ], ct);
                     await context.SaveChangesAsync(ct);
                 }));
+
             builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
+
+            builder.Services.AddRazorPages();
 
             var app = builder.Build();
 
@@ -110,6 +114,7 @@ namespace SportsStore
                 "Products/Page{productPage}",
                 new { controller = "Home", action = "Index", productPage = 1 });
             app.MapDefaultControllerRoute();
+            app.MapRazorPages();
 
             await using (AsyncServiceScope serviceScope = app.Services.CreateAsyncScope())
             await using (StoreDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<StoreDbContext>())
