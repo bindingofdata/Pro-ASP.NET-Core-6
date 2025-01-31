@@ -92,11 +92,13 @@ namespace SportsStore
             builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
 
             builder.Services.AddRazorPages();
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession();
 
             var app = builder.Build();
 
-            //app.MapGet("/", () => "Hello World!");
             app.UseStaticFiles();
+            app.UseSession();
 
             app.MapControllerRoute("catpage",
                 "{category}/Page{productPage:int}",
