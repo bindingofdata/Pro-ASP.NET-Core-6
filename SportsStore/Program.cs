@@ -99,7 +99,8 @@ namespace SportsStore
                 new { controller = "Home", action = "Index" });
 
             app.MapControllerRoute("page",
-                "Page{productPage:int}");
+                "Page{productPage:int}",
+                new { controller = "Home", action = "Index" });
 
             app.MapControllerRoute("category",
                 "{category}",
