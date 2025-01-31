@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Routing;
 
 namespace SportsStore.Tests
 {
@@ -44,6 +46,38 @@ namespace SportsStore.Tests
                 "Oranges",
                 "Plums"
             ], results));
+        }
+
+        [Fact]
+        public void Indicates_Selected_Category()
+        {
+            // Arrange
+            const string categoryToSelect = "Apples";
+            Mock<IStoreRepository> mock = new();
+            mock.Setup(m => m.Products).Returns((
+                new Product[]
+                {
+                    new Product { ProductID = 1, Name = "P1", Category = "Apples" },
+                    new Product { ProductID = 4, Name = "P2", Category = "Oranges" }
+                }).AsQueryable());
+
+            NavigationMenuViewComponent target =
+                new NavigationMenuViewComponent(mock.Object);
+            target.ViewComponentContext = new ViewComponentContext
+            {
+                ViewContext = new ViewContext
+                {
+                    RouteData = new RouteData()
+                }
+            };
+            target.RouteData.Values["category"] = categoryToSelect;
+
+            // Action
+            string? result = (string?)(target.Invoke() as ViewViewComponentResult)
+                ?.ViewData?["SelectedCategory"];
+
+            // Assert
+            Assert.Equal(categoryToSelect, result);
         }
     }
 }

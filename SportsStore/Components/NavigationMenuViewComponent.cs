@@ -13,9 +13,13 @@ namespace SportsStore.Components
             _repository = repository;
         }
 
-        public IViewComponentResult Invoke() => View(_repository.Products
+        public IViewComponentResult Invoke()
+        {
+            ViewBag.SelectedCategory = RouteData?.Values["category"];
+            return View(_repository.Products
             .Select(product => product.Category)
             .Distinct()
             .OrderBy(category => category));
+        }
     }
 }
