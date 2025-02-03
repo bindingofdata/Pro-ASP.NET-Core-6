@@ -43,15 +43,7 @@ namespace SportsStore.Tests
             mockContext.SetupGet(context => context.Session).Returns(mockSession.Object);
 
             // Action
-            CartModel cartModel = new(mockRepo.Object)
-            {
-                PageContext = new PageContext(new ActionContext
-                {
-                    HttpContext = mockContext.Object,
-                    RouteData = new(),
-                    ActionDescriptor = new PageActionDescriptor()
-                })
-            };
+            CartModel cartModel = new(mockRepo.Object, testCart);
             cartModel.OnGet("myUrl");
 
             // Assert
@@ -82,15 +74,7 @@ namespace SportsStore.Tests
             mockContext.SetupGet(context => context.Session).Returns(mockSession.Object);
 
             // Action
-            CartModel cartModel = new(mockRepo.Object)
-            {
-                PageContext = new PageContext(new ActionContext
-                {
-                    HttpContext = mockContext.Object,
-                    RouteData = new(),
-                    ActionDescriptor = new PageActionDescriptor()
-                })
-            };
+            CartModel cartModel = new(mockRepo.Object, testCart);
             cartModel.OnPost(1, "myUrl");
 
             // Assert

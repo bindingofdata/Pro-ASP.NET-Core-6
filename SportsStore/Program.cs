@@ -94,6 +94,8 @@ namespace SportsStore
             builder.Services.AddRazorPages();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession();
+            builder.Services.AddScoped<Cart>(provider => SessionCart.GetCart(provider));
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             var app = builder.Build();
 

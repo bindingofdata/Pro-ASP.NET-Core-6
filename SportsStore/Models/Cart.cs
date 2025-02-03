@@ -1,10 +1,10 @@
 ﻿namespace SportsStore.Models
 {
-    public sealed class Cart
+    public class Cart
     {
         public List<CartLine> Lines { get; set; } = [];
 
-        public void AddItem(Product product, int quantity)
+        public virtual void AddItem(Product product, int quantity)
         {
             CartLine? line = Lines
                 .Where(cartLine => cartLine.Product.ProductID == product.ProductID)
@@ -24,13 +24,13 @@
             }
         }
 
-        public void RemoveLine(Product product) =>
+        public virtual void RemoveLine(Product product) =>
             Lines.RemoveAll(cartLine => cartLine.Product.ProductID == product.ProductID);
 
         public decimal ComputeTotalValue() =>
             Lines.Sum(cartLine => cartLine.Product.Price * cartLine.Quantity);
 
-        public void Clear() => Lines.Clear();
+        public virtual void Clear() => Lines.Clear();
     }
 
     public sealed class CartLine
