@@ -52,7 +52,7 @@ namespace SportsStore.Tests
         }
 
         [Fact]
-        public void Can_Update_Cart()
+        public void Can_Add_To_Cart()
         {
             // Arrange
             // create mock repo
@@ -80,6 +80,42 @@ namespace SportsStore.Tests
             // Assert
             Assert.Single(cartModel.Cart.Lines);
             Assert.Equal("P1", cartModel.Cart.Lines.First().Product.Name);
+            Assert.Equal(1, cartModel.Cart.Lines.First().Quantity);
+        }
+
+        [Fact]
+        public void Can_Remove_From_Cart()
+        {
+            // Arrange
+            // create mock repo
+            Product p1 = new Product { ProductID = 1, Name = "P1" };
+            Product p2 = new Product { ProductID = 2, Name = "P2" };
+            Mock<IStoreRepository> mockRepo = new();
+            mockRepo.Setup(repo => repo.Products)
+                .Returns((new Product[] { p1, p2 })
+                .AsQueryable());
+
+            // create a cart
+            Cart? testCart = new();
+
+            // create mock page context and session
+            Mock<ISession> mockSession = new();
+            mockSession.Setup(session => session.Set(It.IsAny<string>(), It.IsAny<byte[]>()))
+                .Callback<string, byte[]>((key, val) =>
+                    testCart = JsonSerializer.Deserialize<Cart>(Encoding.UTF8.GetString(val)));
+
+            Mock<HttpContext> mockContext = new();
+            mockContext.SetupGet(context => context.Session).Returns(mockSession.Object);
+
+            // Action
+            CartModel cartModel = new(mockRepo.Object, testCart);
+            cartModel.OnPost(1, "myUrl");
+            cartModel.OnPost(2, "myUrl");
+            cartModel.OnPostRemove(1, "myUrl");
+
+            // Assert
+            Assert.Single(cartModel.Cart.Lines);
+            Assert.Equal("P2", cartModel.Cart.Lines.First().Product.Name);
             Assert.Equal(1, cartModel.Cart.Lines.First().Quantity);
         }
     }
