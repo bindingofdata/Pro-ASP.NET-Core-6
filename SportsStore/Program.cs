@@ -97,6 +97,7 @@ namespace SportsStore
             builder.Services.AddSession();
             builder.Services.AddScoped<Cart>(provider => SessionCart.GetCart(provider));
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            builder.Services.AddServerSideBlazor();
 
             var app = builder.Build();
 
@@ -120,6 +121,8 @@ namespace SportsStore
                 new { controller = "Home", action = "Index", productPage = 1 });
             app.MapDefaultControllerRoute();
             app.MapRazorPages();
+            app.MapBlazorHub();
+            app.MapFallbackToPage("/admin/{*catchall}", "/Admin/Index");
 
             await using (AsyncServiceScope serviceScope = app.Services.CreateAsyncScope())
             await using (StoreDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<StoreDbContext>())
