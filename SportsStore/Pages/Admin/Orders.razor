@@ -1,3 +1,43 @@
 ﻿@page "/admin/orders"
+@inherits OwningComponentBase<IOrderRepository>
 
-<h4>This is the Orders component</h4>
+<OrderTable TableTitle="Unshipped Orders"
+Orders="UnshippedOrders"
+ButtonLabel="Ship"
+OrderSelected="ShipOrder" />
+<OrderTable TableTitle="Shipped Orders"
+Orders="ShippedOrders"
+ButtonLabel="Reset"
+OrderSelected="ResetOrder" />
+
+@code {
+    public IOrderRepository Repository => Service;
+    public IEnumerable<Order> AllOrders { get; set; } = Enumerable.Empty<Order>();
+    public IEnumerable<Order> UnshippedOrders { get; set; } = Enumerable.Empty<Order>();
+    public IEnumerable<Order> ShippedOrders { get; set; } = Enumerable.Empty<Order>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        await UpdateData();
+    }
+
+    public async Task UpdateData()
+    {
+        AllOrders = await Repository.Orders.ToListAsync();
+        UnshippedOrders = AllOrders.Where(o => !o.Shipped);
+        ShippedOrders = AllOrders.Where(o => o.Shipped);
+    }
+
+    public void ShipOrder(int oderID) => UpdateOrder(oderID, true);
+    public void ResetOrder(int oderID) => UpdateOrder(oderID, false);
+
+    private void UpdateOrder(int orderID, bool shipped)
+    {
+        Order? order = AllOrders.FirstOrDefault(o => o.OrderID == orderID);
+        if (order != null)
+        {
+            order.Shipped = shipped;
+            Repository.SaveOrder(order);
+        }
+    }
+}
