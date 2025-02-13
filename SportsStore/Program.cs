@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 using SportsStore.Models;
@@ -11,6 +12,7 @@ namespace SportsStore
             var builder = WebApplication.CreateBuilder(args);
             builder.Services.AddControllersWithViews();
 
+            // DB Contexts
             builder.Services.AddDbContext<StoreDbContext>(options =>
                 options.UseSqlServer(builder.Configuration["ConnectionStrings:SportsStoreConnection"])
                 .UseSeeding((context, _) =>
@@ -35,9 +37,17 @@ namespace SportsStore
                     await context.SaveChangesAsync(ct);
                 }));
 
+            builder.Services.AddDbContext<AppIdentityDbContext>(options =>
+                options.UseSqlServer(builder.Configuration["ConnectionStrings:IdentityConnection"])
+                );
+            builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppIdentityDbContext>();
+
+            // Scoped services
             builder.Services.AddScoped<IStoreRepository, EFStoreRepository>();
             builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
 
+            // Additional services
             builder.Services.AddRazorPages();
             builder.Services.AddDistributedMemoryCache();
             builder.Services.AddSession();
@@ -49,6 +59,9 @@ namespace SportsStore
 
             app.UseStaticFiles();
             app.UseSession();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllerRoute("catpage",
                 "{category}/Page{productPage:int}",
@@ -76,6 +89,7 @@ namespace SportsStore
                 await dbContext.Database.EnsureCreatedAsync();
                 await RunPendingMigrations(dbContext);
             }
+            IdentitySeedData.EnsurePopulated(app);
 
             app.Run();
         }
