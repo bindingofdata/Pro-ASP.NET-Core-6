@@ -3,10 +3,14 @@ using Microsoft.EntityFrameworkCore;
 
 using SportsStore.Models;
 
+using System.Net.NetworkInformation;
+
 namespace SportsStore
 {
     public class Program
     {
+        private static string DEFAULT_LOCAL = "en-US";
+
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
@@ -56,6 +60,18 @@ namespace SportsStore
             builder.Services.AddServerSideBlazor();
 
             var app = builder.Build();
+
+            if (app.Environment.IsProduction())
+            {
+                app.UseExceptionHandler("/error");
+            }
+
+            app.UseRequestLocalization(opts =>
+            {
+                opts.AddSupportedCultures(DEFAULT_LOCAL)
+                .AddSupportedUICultures(DEFAULT_LOCAL)
+                .SetDefaultCulture(DEFAULT_LOCAL);
+            });
 
             app.UseStaticFiles();
             app.UseSession();
