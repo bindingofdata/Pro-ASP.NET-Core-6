@@ -9,7 +9,7 @@ namespace SportsStore
 {
     public class Program
     {
-        private static string DEFAULT_LOCAL = "en-US";
+        private static string DEFAULT_LOCALE = "en-US";
 
         public static async Task Main(string[] args)
         {
@@ -68,9 +68,9 @@ namespace SportsStore
 
             app.UseRequestLocalization(opts =>
             {
-                opts.AddSupportedCultures(DEFAULT_LOCAL)
-                .AddSupportedUICultures(DEFAULT_LOCAL)
-                .SetDefaultCulture(DEFAULT_LOCAL);
+                opts.AddSupportedCultures(DEFAULT_LOCALE)
+                .AddSupportedUICultures(DEFAULT_LOCALE)
+                .SetDefaultCulture(DEFAULT_LOCALE);
             });
 
             app.UseStaticFiles();
@@ -102,9 +102,13 @@ namespace SportsStore
             await using (AsyncServiceScope serviceScope = app.Services.CreateAsyncScope())
             await using (StoreDbContext dbContext = serviceScope.ServiceProvider.GetRequiredService<StoreDbContext>())
             {
-                await dbContext.Database.EnsureCreatedAsync();
                 await RunPendingMigrations(dbContext);
+                if (!dbContext.Products.Any())
+                {
+                    await dbContext.Database.EnsureCreatedAsync();
+                }
             }
+
             IdentitySeedData.EnsurePopulated(app);
 
             app.Run();
