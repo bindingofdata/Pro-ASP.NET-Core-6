@@ -18,7 +18,7 @@
                 {
                     context.Response.ContentType = "text/plain";
                 }
-                await context.Response.WriteAsync("Class-based MiddleWare \n");
+                await context.Response.WriteAsync("Class-based MiddleWare\n");
             }
             await _next(context);
         }
