@@ -8,12 +8,7 @@ namespace Platform
             var app = builder.Build();
 
             app.Map("/branch", branch =>
-            {
-                branch.UseMiddleware<QueryStringMiddleWare>();
-
-                branch.Run(async (HttpContext context) =>
-                    await context.Response.WriteAsync("Branch MiddleWare\n"));
-            });
+                branch.Run(new QueryStringMiddleWare().Invoke));
 
             // modify HTTPResponse after calling next()
             app.Use(async (context, next) =>

@@ -2,7 +2,9 @@
 {
     public sealed class QueryStringMiddleWare
     {
-        private readonly RequestDelegate _next;
+        private readonly RequestDelegate? _next;
+
+        public QueryStringMiddleWare() { }
 
         public QueryStringMiddleWare(RequestDelegate next)
         {
@@ -20,7 +22,11 @@
                 }
                 await context.Response.WriteAsync("Class-based MiddleWare\n");
             }
-            await _next(context);
+
+            if (_next != null)
+            {
+                await _next(context);
+            }
         }
     }
 }
