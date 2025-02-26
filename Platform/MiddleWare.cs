@@ -1,4 +1,6 @@
-﻿namespace Platform
+﻿using Microsoft.Extensions.Options;
+
+namespace Platform
 {
     public sealed class QueryStringMiddleWare
     {
@@ -24,6 +26,30 @@
             }
 
             if (_next != null)
+            {
+                await _next(context);
+            }
+        }
+    }
+
+    public sealed class LocationMiddleWare
+    {
+        private readonly RequestDelegate _next;
+        private readonly MessageOptions _options;
+
+        public LocationMiddleWare(RequestDelegate requestDelegate, IOptions<MessageOptions> messageOptions)
+        {
+            _next = requestDelegate;
+            _options = messageOptions.Value;
+        }
+
+        public async Task Invoke(HttpContext context)
+        {
+            if (context.Request.Path == "/location")
+            {
+                await context.Response.WriteAsync($"{_options.CityName}, {_options.CountryName}");
+            }
+            else
             {
                 await _next(context);
             }
