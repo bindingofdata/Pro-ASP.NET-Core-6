@@ -10,7 +10,8 @@ namespace Platform
             builder.Services.Configure<MessageOptions>(options => options.CityName = "Ontario");
             var app = builder.Build();
 
-            app.UseMiddleware<LocationMiddleWare>();
+            #region configuration options examples
+            //app.UseMiddleware<LocationMiddleWare>();
 
             //app.MapGet("/location", async (HttpContext context,
             //    IOptions<MessageOptions> msgOpts) =>
@@ -18,7 +19,7 @@ namespace Platform
             //    MessageOptions options = msgOpts.Value;
             //    await context.Response.WriteAsync($"{options.CityName}, {options.CountryName}");
             //});
-
+            #endregion
             #region middleware examples
             //app.Map("/branch", branch =>
             //    branch.Run(new QueryStringMiddleWare().Invoke));
