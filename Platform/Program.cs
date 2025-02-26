@@ -10,6 +10,11 @@ namespace Platform
             builder.Services.Configure<MessageOptions>(options => options.CityName = "Ontario");
             var app = builder.Build();
 
+            app.UseMiddleware<Population>();
+            app.UseMiddleware<Capital>();
+            app.Run(async (context) =>
+                await context.Response.WriteAsync("Terminal Middleware Reached"));
+
             #region configuration options examples
             //app.UseMiddleware<LocationMiddleWare>();
 
