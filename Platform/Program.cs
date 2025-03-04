@@ -10,9 +10,6 @@ namespace Platform
             builder.Services.Configure<MessageOptions>(options => options.CityName = "Ontario");
             var app = builder.Build();
 
-            //app.UseMiddleware<Population>();
-            //app.UseMiddleware<Capital>();
-
             app.UseRouting();
 
             app.MapGet("{first}/{second}/{third}", async context =>
@@ -23,11 +20,8 @@ namespace Platform
                     await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
                 }
             });
-            app.MapGet("capital/uk", new Capital().Invoke);
-            app.MapGet("population/paris", new Population().Invoke);
-
-            //app.Run(async (context) =>
-            //    await context.Response.WriteAsync("Terminal Middleware Reached"));
+            app.MapGet("capital/{country}", Capital.Endpoint);
+            app.MapGet("population/{city}", Population.Endpoint);
 
             #region configuration options examples
             //app.UseMiddleware<LocationMiddleWare>();
@@ -78,8 +72,6 @@ namespace Platform
             //// custom class-based middleware
             //app.UseMiddleware<QueryStringMiddleWare>();
             #endregion
-
-            app.MapGet("/", () => "Hello World!");
 
             app.Run();
         }

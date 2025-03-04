@@ -2,45 +2,29 @@
 {
     public sealed class Capital
     {
-        private RequestDelegate? _next;
-
-        public Capital() { }
-
-        public Capital(RequestDelegate next)
+        public static async Task Endpoint(HttpContext context)
         {
-            _next = next;
-        }
-
-        public async Task Invoke(HttpContext context)
-        {
-            string[] parts = context.Request.Path.ToString()
-                .Split("/", StringSplitOptions.RemoveEmptyEntries);
-
-            if (parts.Length == 2 && parts[0] == "capital")
+            string? capital = null;
+            string? country = context.Request.RouteValues["country"] as string;
+            switch ((country ?? string.Empty).ToLower())
             {
-                string? capital = null;
-                string country = parts[1];
-                switch (country.ToLower())
-                {
-                    case "uk":
-                        capital = "London";
-                        break;
-                    case "france":
-                        capital = "Paris";
-                        break;
-                    case "monoco":
-                        context.Response.Redirect($"/population/{country}");
-                        return;
-                }
-                if (capital != null)
-                {
-                    await context.Response.WriteAsync($"{capital} is the capital of {country}");
+                case "uk":
+                    capital = "London";
+                    break;
+                case "france":
+                    capital = "Paris";
+                    break;
+                case "monoco":
+                    context.Response.Redirect($"/population/{country}");
                     return;
-                }
             }
-            if (_next != null)
+            if (capital != null)
             {
-                await _next(context);
+                await context.Response.WriteAsync($"{capital} is the capital of {country}");
+            }
+            else
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
             }
         }
     }
