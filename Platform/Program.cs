@@ -10,8 +10,8 @@ namespace Platform
             builder.Services.Configure<MessageOptions>(options => options.CityName = "Ontario");
             var app = builder.Build();
 
-            app.UseMiddleware<Population>();
-            app.UseMiddleware<Capital>();
+            //app.UseMiddleware<Population>();
+            //app.UseMiddleware<Capital>();
 
             app.UseRouting();
 
@@ -21,6 +21,8 @@ namespace Platform
                 {
                     await context.Response.WriteAsync("Request was Routed.");
                 });
+                endpoints.MapGet("capital/uk", new Capital().Invoke);
+                endpoints.MapGet("population/paris", new Population().Invoke);
             });
 
             app.Run(async (context) =>
