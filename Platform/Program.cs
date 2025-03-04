@@ -15,8 +15,14 @@ namespace Platform
 
             app.UseRouting();
 
-            app.MapGet("routing", async context =>
-                await context.Response.WriteAsync("Request was Routed."));
+            app.MapGet("{first}/{second}/{third}", async context =>
+            {
+                await context.Response.WriteAsync("Request was routed\n");
+                foreach (KeyValuePair<string, object?> kvp in context.Request.RouteValues)
+                {
+                    await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
+                }
+            });
             app.MapGet("capital/uk", new Capital().Invoke);
             app.MapGet("population/paris", new Population().Invoke);
 
