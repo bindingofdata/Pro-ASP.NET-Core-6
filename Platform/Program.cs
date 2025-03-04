@@ -15,18 +15,13 @@ namespace Platform
 
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("routing", async context =>
-                {
-                    await context.Response.WriteAsync("Request was Routed.");
-                });
-                endpoints.MapGet("capital/uk", new Capital().Invoke);
-                endpoints.MapGet("population/paris", new Population().Invoke);
-            });
+            app.MapGet("routing", async context =>
+                await context.Response.WriteAsync("Request was Routed."));
+            app.MapGet("capital/uk", new Capital().Invoke);
+            app.MapGet("population/paris", new Population().Invoke);
 
-            app.Run(async (context) =>
-                await context.Response.WriteAsync("Terminal Middleware Reached"));
+            //app.Run(async (context) =>
+            //    await context.Response.WriteAsync("Terminal Middleware Reached"));
 
             #region configuration options examples
             //app.UseMiddleware<LocationMiddleWare>();
