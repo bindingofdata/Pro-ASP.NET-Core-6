@@ -7,7 +7,10 @@ namespace Platform
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Services.Configure<MessageOptions>(options => options.CityName = "Ontario");
+
+            builder.Services.Configure<RouteOptions>(options =>
+                options.ConstraintMap.Add("countryName", typeof(CountryRouteConstraint)));
+
             var app = builder.Build();
 
             app.UseRouting();
@@ -20,7 +23,7 @@ namespace Platform
                     await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
                 }
             });
-            app.MapGet("capital/{country=france}", Capital.Endpoint);
+            app.MapGet("capital/{country:countryName}", Capital.Endpoint);
             app.MapGet("population/{city?}", Population.Endpoint)
                 .WithMetadata(new RouteNameMetadata("population"));
 
