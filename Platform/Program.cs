@@ -12,7 +12,7 @@ namespace Platform
 
             app.UseRouting();
 
-            app.MapGet("{first}/{second}/{third}", async context =>
+            app.MapGet("{first:int}/{second:bool}/{*catchall}", async context =>
             {
                 await context.Response.WriteAsync("Request was routed\n");
                 foreach (KeyValuePair<string, object?> kvp in context.Request.RouteValues)
@@ -20,8 +20,8 @@ namespace Platform
                     await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
                 }
             });
-            app.MapGet("capital/{country}", Capital.Endpoint);
-            app.MapGet("population/{city}", Population.Endpoint)
+            app.MapGet("capital/{country=france}", Capital.Endpoint);
+            app.MapGet("population/{city?}", Population.Endpoint)
                 .WithMetadata(new RouteNameMetadata("population"));
 
             #region configuration options examples
