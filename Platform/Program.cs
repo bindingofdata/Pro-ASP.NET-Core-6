@@ -15,23 +15,22 @@ namespace Platform
 
             app.UseRouting();
 
-            app.MapGet("{first:int}/{second:bool}/{*catchall}", async context =>
-            {
-                await context.Response.WriteAsync("Request was routed\n");
-                foreach (KeyValuePair<string, object?> kvp in context.Request.RouteValues)
-                {
-                    await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
-                }
-            });
-            app.MapGet("capital/{country:countryName}", Capital.Endpoint);
-            app.MapGet("population/{city?}", Population.Endpoint)
-                .WithMetadata(new RouteNameMetadata("population"));
+            #region routing constraints examples
+            //// constrained elements and catchall element
+            //app.MapGet("{first:int}/{second:bool}/{*catchall}", async context =>
+            //{
+            //    await context.Response.WriteAsync("Request was routed\n");
+            //    foreach (KeyValuePair<string, object?> kvp in context.Request.RouteValues)
+            //        await context.Response.WriteAsync($"{kvp.Key}: {kvp.Value}\n");
+            //});
 
-            app.MapFallback(async context =>
-            {
-                await context.Response.WriteAsync("Routed to fallback endpoint.");
-            });
+            //// custom constrained element
+            //app.MapGet("capital/{country:countryName}", Capital.Endpoint);
 
+            //// optional element
+            //app.MapGet("population/{city?}", Population.Endpoint)
+            //    .WithMetadata(new RouteNameMetadata("population"));
+            #endregion
             #region configuration options examples
             //app.UseMiddleware<LocationMiddleWare>();
 
@@ -81,6 +80,9 @@ namespace Platform
             //// custom class-based middleware
             //app.UseMiddleware<QueryStringMiddleWare>();
             #endregion
+
+            app.MapFallback(async context =>
+                await context.Response.WriteAsync("Routed to fallback endpoint."));
 
             app.Run();
         }
