@@ -24,6 +24,11 @@ namespace Platform
             app.MapGet("population/{city?}", Population.Endpoint)
                 .WithMetadata(new RouteNameMetadata("population"));
 
+            app.MapFallback(async context =>
+            {
+                await context.Response.WriteAsync("Routed to fallback endpoint.");
+            });
+
             #region configuration options examples
             //app.UseMiddleware<LocationMiddleWare>();
 
