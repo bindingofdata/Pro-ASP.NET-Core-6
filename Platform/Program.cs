@@ -14,10 +14,12 @@ namespace Platform
             var app = builder.Build();
 
             app.Map("{number:int}", async context =>
-                await context.Response.WriteAsync("Routed to INT endpoint"));
+                await context.Response.WriteAsync("Routed to INT endpoint"))
+                .Add(builder => ((RouteEndpointBuilder)builder).Order = 1);
 
             app.Map("{number:double}", async context =>
-                await context.Response.WriteAsync("Routed to DOUBLE endpoint"));
+                await context.Response.WriteAsync("Routed to DOUBLE endpoint"))
+                .Add(builder => ((RouteEndpointBuilder)builder).Order = 2);
 
             #region routing constraints examples
             //// constrained elements and catchall element
