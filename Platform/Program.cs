@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Options;
-
 namespace Platform
 {
     public class Program
@@ -13,12 +11,28 @@ namespace Platform
 
             var app = builder.Build();
 
+            app.Use(async (context, next) =>
+            {
+                Endpoint? endpoint = context.GetEndpoint();
+                if (endpoint != null)
+                {
+                    await context.Response.WriteAsync($"{endpoint.DisplayName} Selected\n");
+                }
+                else
+                {
+                    await context.Response.WriteAsync("No Endpoint Selected\n");
+                }
+                await next();
+            });
+
             app.Map("{number:int}", async context =>
                 await context.Response.WriteAsync("Routed to INT endpoint"))
+                .WithDisplayName("Int Endpoint")
                 .Add(builder => ((RouteEndpointBuilder)builder).Order = 1);
 
             app.Map("{number:double}", async context =>
                 await context.Response.WriteAsync("Routed to DOUBLE endpoint"))
+                .WithDisplayName("Double Endpoint")
                 .Add(builder => ((RouteEndpointBuilder)builder).Order = 2);
 
             #region routing constraints examples
@@ -88,7 +102,8 @@ namespace Platform
             #endregion
 
             app.MapFallback(async context =>
-                await context.Response.WriteAsync("Routed to fallback endpoint."));
+                await context.Response.WriteAsync("Routed to fallback endpoint."))
+                .WithDisplayName("Fallback Endpoint");
 
             app.Run();
         }
