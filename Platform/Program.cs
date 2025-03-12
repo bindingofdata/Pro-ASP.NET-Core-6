@@ -1,3 +1,5 @@
+using Platform.Services;
+
 namespace Platform
 {
     public class Program
@@ -11,30 +13,49 @@ namespace Platform
 
             var app = builder.Build();
 
-            app.Use(async (context, next) =>
-            {
-                Endpoint? endpoint = context.GetEndpoint();
-                if (endpoint != null)
-                {
-                    await context.Response.WriteAsync($"{endpoint.DisplayName} Selected\n");
-                }
-                else
-                {
-                    await context.Response.WriteAsync("No Endpoint Selected\n");
-                }
-                await next();
-            });
+            app.UseMiddleware<WeatherMiddleware>();
 
-            app.Map("{number:int}", async context =>
-                await context.Response.WriteAsync("Routed to INT endpoint"))
-                .WithDisplayName("Int Endpoint")
-                .Add(builder => ((RouteEndpointBuilder)builder).Order = 1);
+            // middleware function with response formatter example
+            IResponseFormatter formatter = new TextResponseFormatter();
+            app.MapGet("middleware/function", async (context) =>
+                await formatter.Format(context, "Middleware Function: It is snowing in Chicago"));
 
-            app.Map("{number:double}", async context =>
-                await context.Response.WriteAsync("Routed to DOUBLE endpoint"))
-                .WithDisplayName("Double Endpoint")
-                .Add(builder => ((RouteEndpointBuilder)builder).Order = 2);
+            // endpoint class example
+            app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
 
+            // endpoint function example
+            app.MapGet("endpoint/function", async context =>
+                await context.Response.WriteAsync("Endpoint Function: It is sunny in LA"));
+
+            #region advanced routing examples
+            //// accessing endpoint from middleware example
+            //app.Use(async (context, next) =>
+            //{
+            //    Endpoint? endpoint = context.GetEndpoint();
+            //    if (endpoint != null)
+            //        await context.Response.WriteAsync($"{endpoint.DisplayName} Selected\n");
+            //    else
+            //        await context.Response.WriteAsync("No Endpoint Selected\n");
+
+            //    await next();
+            //});
+
+            //// defined routing order and display name examples
+            //app.Map("{number:int}", async context =>
+            //    await context.Response.WriteAsync("Routed to INT endpoint"))
+            //    .WithDisplayName("Int Endpoint")
+            //    .Add(builder => ((RouteEndpointBuilder)builder).Order = 1);
+
+            //app.Map("{number:double}", async context =>
+            //    await context.Response.WriteAsync("Routed to DOUBLE endpoint"))
+            //    .WithDisplayName("Double Endpoint")
+            //    .Add(builder => ((RouteEndpointBuilder)builder).Order = 2);
+
+            //// fallback endpoint example
+            //app.MapFallback(async context =>
+            //    await context.Response.WriteAsync("Routed to fallback endpoint."))
+            //    .WithDisplayName("Fallback Endpoint");
+            #endregion
             #region routing constraints examples
             //// constrained elements and catchall element
             //app.MapGet("{first:int}/{second:bool}/{*catchall}", async context =>
@@ -100,10 +121,6 @@ namespace Platform
             //// custom class-based middleware
             //app.UseMiddleware<QueryStringMiddleWare>();
             #endregion
-
-            app.MapFallback(async context =>
-                await context.Response.WriteAsync("Routed to fallback endpoint."))
-                .WithDisplayName("Fallback Endpoint");
 
             app.Run();
         }
