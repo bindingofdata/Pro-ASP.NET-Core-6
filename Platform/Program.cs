@@ -20,7 +20,7 @@ namespace Platform
 
             // Dependency Injection in endpoint class example
             //app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
-            app.MapWeather("endpoint/class");
+            app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 
             // Dependency Injection endpoint example
             app.MapGet("endpoint/function", async (HttpContext context, IResponseFormatter formatter) =>
