@@ -8,25 +8,33 @@ namespace Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.Configure<RouteOptions>(options =>
-                options.ConstraintMap.Add("countryName", typeof(CountryRouteConstraint)));
+            builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
 
             var app = builder.Build();
 
             app.UseMiddleware<WeatherMiddleware>();
 
-            // middleware function with response formatter example
-            IResponseFormatter formatter = new TextResponseFormatter();
-            app.MapGet("middleware/function", async (context) =>
+            // Dependency Injection middleware example
+            app.MapGet("middleware/function", async (HttpContext context, IResponseFormatter formatter) =>
                 await formatter.Format(context, "Middleware Function: It is snowing in Chicago"));
 
-            // endpoint class example
-            app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+            // Dependency Injection endpoint example
+            app.MapGet("endpoint/function", async (HttpContext context, IResponseFormatter formatter) =>
+                await formatter.Format(context, "Endpoint Function: It is sunny in LA"));
 
-            // endpoint function example
-            app.MapGet("endpoint/function", async context =>
-                await context.Response.WriteAsync("Endpoint Function: It is sunny in LA"));
+            #region tightly coupled middleware examples
+            //// middleware function with response formatter example
+            //IResponseFormatter formatter = new TextResponseFormatter();
+            //app.MapGet("middleware/function", async (context) =>
+            //    await formatter.Format(context, "Middleware Function: It is snowing in Chicago"));
 
+            //// endpoint class example
+            //app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+
+            //// endpoint function example
+            //app.MapGet("endpoint/function", async context =>
+            //    await context.Response.WriteAsync("Endpoint Function: It is sunny in LA"));
+            #endregion
             #region advanced routing examples
             //// accessing endpoint from middleware example
             //app.Use(async (context, next) =>
