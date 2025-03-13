@@ -18,6 +18,9 @@ namespace Platform
             app.MapGet("middleware/function", async (HttpContext context, IResponseFormatter formatter) =>
                 await formatter.Format(context, "Middleware Function: It is snowing in Chicago"));
 
+            // Dependency Injection in endpoint class example
+            app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+
             // Dependency Injection endpoint example
             app.MapGet("endpoint/function", async (HttpContext context, IResponseFormatter formatter) =>
                 await formatter.Format(context, "Endpoint Function: It is sunny in LA"));
