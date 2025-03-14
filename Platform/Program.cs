@@ -8,7 +8,11 @@ namespace Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
+            // Singleton service example
+            //builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
+
+            // Transient service example
+            builder.Services.AddTransient<IResponseFormatter, GuidService>();
 
             var app = builder.Build();
 
