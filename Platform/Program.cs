@@ -30,8 +30,12 @@ namespace Platform
             app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 
             // Dependency Injection endpoint example
-            app.MapGet("endpoint/function", async (HttpContext context, IResponseFormatter formatter) =>
-                await formatter.Format(context, "Endpoint Function: It is sunny in LA"));
+            // Updated to use scoped service
+            app.MapGet("endpoint/function", async (HttpContext context) =>
+            {
+                IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>();
+                await formatter.Format(context, "Endpoint Function: It is sunny in LA");
+            });
 
             #region tightly coupled middleware examples
             //// middleware function with response formatter example
