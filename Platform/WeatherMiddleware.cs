@@ -1,24 +1,31 @@
 ﻿using Platform.Services;
 
+using System.Runtime.Serialization;
+
 namespace Platform
 {
     public sealed class WeatherMiddleware
     {
         private readonly RequestDelegate _next;
-        //private readonly IResponseFormatter _formatter;
 
-        public WeatherMiddleware(RequestDelegate next, IResponseFormatter formatter)
+        public WeatherMiddleware(RequestDelegate next)
         {
             _next = next;
-            //_formatter = formatter;
         }
 
-        public async Task Invoke(HttpContext context, IResponseFormatter formatter)
+        public async Task Invoke(HttpContext context, IResponseFormatter formatter0,
+            IResponseFormatter formatter1, IResponseFormatter formatter2)
         {
             if (string.Equals(context.Request.Path, "/middleware/class"))
-                await formatter.Format(context, "Middleware Class: It is raining in London");
+            {
+                await formatter0.Format(context, string.Empty);
+                await formatter1.Format(context, string.Empty);
+                await formatter2.Format(context, string.Empty);
+            }
             else
+            {
                 await _next(context);
+            }
         }
     }
 }

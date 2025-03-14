@@ -12,7 +12,10 @@ namespace Platform
             //builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
 
             // Transient service example
-            builder.Services.AddTransient<IResponseFormatter, GuidService>();
+            //builder.Services.AddTransient<IResponseFormatter, GuidService>();
+
+            // Scoped service example
+            builder.Services.AddScoped<IResponseFormatter, GuidService>();
 
             var app = builder.Build();
 
