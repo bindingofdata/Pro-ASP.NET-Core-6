@@ -7,12 +7,34 @@ namespace Platform
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Start of chain example
-            builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
-            // Second item in chain example: Time Response Formatter references ITimeStamper
-            builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
-
+            #region Service Factory Functions example
+            IConfiguration config = builder.Configuration;
+            builder.Services.AddScoped<IResponseFormatter>(serviceProvider =>
+            {
+                string? typeName = config["services:IResponseFormatter"];
+                return (IResponseFormatter)ActivatorUtilities.CreateInstance(
+                    serviceProvider, string.IsNullOrWhiteSpace(typeName)
+                        ? typeof(GuidService) : Type.GetType(typeName, true)!);
+            });
+            #endregion
+            #region Accessing services in the Program.cs file
+            //IWebHostEnvironment env = builder.Environment;
+            //if (env.IsDevelopment())
+            //{
+            //    builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
+            //    builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
+            //}
+            //else
+            //{
+            //    builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
+            //}
+            #endregion
+            #region Dependency chains example
+            //// Start of chain example
+            //builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
+            //// Second item in chain example: Time Response Formatter references ITimeStamper
+            //builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
+            #endregion
             #region Service lifetime examples
             // Singleton service example
             //builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
