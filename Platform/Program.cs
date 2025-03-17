@@ -1,4 +1,4 @@
-using Platform.Services;
+//using Platform.Services;
 
 namespace Platform
 {
@@ -8,10 +8,13 @@ namespace Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            #region Services with multiple implementations example
-            builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
-            builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
-            builder.Services.AddScoped<IResponseFormatter, GuidService>();
+            #region Unbound types in services example
+            builder.Services.AddSingleton(typeof(ICollection<>), typeof(List<>));
+            #endregion
+            #region Services with multiple implementations examples
+            //builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
+            //builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
+            //builder.Services.AddScoped<IResponseFormatter, GuidService>();
             #endregion
             #region Service Factory Functions example
             //IConfiguration config = builder.Configuration;
@@ -54,39 +57,58 @@ namespace Platform
 
             var app = builder.Build();
 
-            app.UseMiddleware<WeatherMiddleware>();
+            //app.UseMiddleware<WeatherMiddleware>();
 
-            #region services with multiple implementations example
-            app.MapGet("single", async context =>
+            #region unbound types in services examples
+            app.MapGet("string", async context =>
             {
-                IResponseFormatter formatter = context.RequestServices
-                    .GetRequiredService<IResponseFormatter>();
-                await formatter.Format(context, "Single service");
+                ICollection<string> collection = context.RequestServices
+                    .GetRequiredService<ICollection<string>>();
+                collection.Add($"Request: {DateTime.Now.ToLongTimeString()}");
+                foreach (string str in collection)
+                    await context.Response.WriteAsync($"String: {str}\n");
             });
 
-            app.MapGet("/", async context =>
+            app.MapGet("int", async context =>
             {
-                IResponseFormatter formatter = context.RequestServices
-                    .GetServices<IResponseFormatter>().First(f => f.RichOutput);
-                await formatter.Format(context, "Multiple services");
+                ICollection<int> collection = context.RequestServices
+                    .GetRequiredService<ICollection<int>>();
+                collection.Add(collection.Count + 1);
+                foreach (int val in collection)
+                    await context.Response.WriteAsync($"Int: {val}\n");
             });
             #endregion
+            #region services with multiple implementations example
+            //app.MapGet("single", async context =>
+            //{
+            //    IResponseFormatter formatter = context.RequestServices
+            //        .GetRequiredService<IResponseFormatter>();
+            //    await formatter.Format(context, "Single service");
+            //});
+
+            //app.MapGet("/", async context =>
+            //{
+            //    IResponseFormatter formatter = context.RequestServices
+            //        .GetServices<IResponseFormatter>().First(f => f.RichOutput);
+            //    await formatter.Format(context, "Multiple services");
+            //});
+            #endregion
             #region basic dependency injection examples
-            // Dependency Injection middleware example
-            app.MapGet("middleware/function", async (HttpContext context, IResponseFormatter formatter) =>
-                await formatter.Format(context, "Middleware Function: It is snowing in Chicago"));
+            //// Dependency Injection middleware example
+            //app.MapGet("middleware/function", async (HttpContext context, IResponseFormatter formatter) =>
+            //    await formatter.Format(context, "Middleware Function: It is snowing in Chicago"));
 
-            // Dependency Injection in endpoint class example
-            //app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
-            app.MapEndpoint<WeatherEndpoint>("endpoint/class");
+            //// Dependency Injection in endpoint class example
+            ////app.MapGet("endpoint/class", WeatherEndpoint.Endpoint);
+            //app.MapEndpoint<WeatherEndpoint>("endpoint/class");
 
-            // Dependency Injection endpoint example
-            // Updated to use scoped service
-            app.MapGet("endpoint/function", async (HttpContext context) =>
-            {
-                IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>();
-                await formatter.Format(context, "Endpoint Function: It is sunny in LA");
-            });
+            //// Dependency Injection endpoint example
+            //// Updated to use scoped service
+            //app.MapGet("endpoint/function", async (HttpContext context) =>
+            //{
+            //    IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>();
+            //    await formatter.Format(context, "Endpoint Function: It is sunny in LA");
+            //});
             #endregion
             #region tightly coupled middleware examples
             //// middleware function with response formatter example
