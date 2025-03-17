@@ -7,15 +7,21 @@ namespace Platform
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            #region Services with multiple implementations example
+            builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
+            builder.Services.AddScoped<IResponseFormatter, HtmlResponseFormatter>();
+            builder.Services.AddScoped<IResponseFormatter, GuidService>();
+            #endregion
             #region Service Factory Functions example
-            IConfiguration config = builder.Configuration;
-            builder.Services.AddScoped<IResponseFormatter>(serviceProvider =>
-            {
-                string? typeName = config["services:IResponseFormatter"];
-                return (IResponseFormatter)ActivatorUtilities.CreateInstance(
-                    serviceProvider, string.IsNullOrWhiteSpace(typeName)
-                        ? typeof(GuidService) : Type.GetType(typeName, true)!);
-            });
+            //IConfiguration config = builder.Configuration;
+            //builder.Services.AddScoped<IResponseFormatter>(serviceProvider =>
+            //{
+            //    string? typeName = config["services:IResponseFormatter"];
+            //    return (IResponseFormatter)ActivatorUtilities.CreateInstance(
+            //        serviceProvider, string.IsNullOrWhiteSpace(typeName)
+            //            ? typeof(GuidService) : Type.GetType(typeName, true)!);
+            //});
             #endregion
             #region Accessing services in the Program.cs file
             //IWebHostEnvironment env = builder.Environment;
@@ -50,6 +56,22 @@ namespace Platform
 
             app.UseMiddleware<WeatherMiddleware>();
 
+            #region services with multiple implementations example
+            app.MapGet("single", async context =>
+            {
+                IResponseFormatter formatter = context.RequestServices
+                    .GetRequiredService<IResponseFormatter>();
+                await formatter.Format(context, "Single service");
+            });
+
+            app.MapGet("/", async context =>
+            {
+                IResponseFormatter formatter = context.RequestServices
+                    .GetServices<IResponseFormatter>().First(f => f.RichOutput);
+                await formatter.Format(context, "Multiple services");
+            });
+            #endregion
+            #region basic dependency injection examples
             // Dependency Injection middleware example
             app.MapGet("middleware/function", async (HttpContext context, IResponseFormatter formatter) =>
                 await formatter.Format(context, "Middleware Function: It is snowing in Chicago"));
@@ -65,7 +87,7 @@ namespace Platform
                 IResponseFormatter formatter = context.RequestServices.GetRequiredService<IResponseFormatter>();
                 await formatter.Format(context, "Endpoint Function: It is sunny in LA");
             });
-
+            #endregion
             #region tightly coupled middleware examples
             //// middleware function with response formatter example
             //IResponseFormatter formatter = new TextResponseFormatter();
