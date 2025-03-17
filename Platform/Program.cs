@@ -8,6 +8,12 @@ namespace Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Start of chain example
+            builder.Services.AddScoped<IResponseFormatter, TimeResponseFormatter>();
+            // Second item in chain example: Time Response Formatter references ITimeStamper
+            builder.Services.AddScoped<ITimeStamper, DefaultTimeStamper>();
+
+            #region Service lifetime examples
             // Singleton service example
             //builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
 
@@ -15,7 +21,8 @@ namespace Platform
             //builder.Services.AddTransient<IResponseFormatter, GuidService>();
 
             // Scoped service example
-            builder.Services.AddScoped<IResponseFormatter, GuidService>();
+            //builder.Services.AddScoped<IResponseFormatter, GuidService>();
+            #endregion
 
             var app = builder.Build();
 
