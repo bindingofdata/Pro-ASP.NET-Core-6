@@ -9,7 +9,7 @@ namespace Platform
             var builder = WebApplication.CreateBuilder(args);
 
             #region Unbound types in services example
-            builder.Services.AddSingleton(typeof(ICollection<>), typeof(List<>));
+            //builder.Services.AddSingleton(typeof(ICollection<>), typeof(List<>));
             #endregion
             #region Services with multiple implementations examples
             //builder.Services.AddScoped<IResponseFormatter, TextResponseFormatter>();
@@ -57,26 +57,27 @@ namespace Platform
 
             var app = builder.Build();
 
+            #region Chapter 14 code
             //app.UseMiddleware<WeatherMiddleware>();
-
+            #endregion
             #region unbound types in services examples
-            app.MapGet("string", async context =>
-            {
-                ICollection<string> collection = context.RequestServices
-                    .GetRequiredService<ICollection<string>>();
-                collection.Add($"Request: {DateTime.Now.ToLongTimeString()}");
-                foreach (string str in collection)
-                    await context.Response.WriteAsync($"String: {str}\n");
-            });
+            //app.MapGet("string", async context =>
+            //{
+            //    ICollection<string> collection = context.RequestServices
+            //        .GetRequiredService<ICollection<string>>();
+            //    collection.Add($"Request: {DateTime.Now.ToLongTimeString()}");
+            //    foreach (string str in collection)
+            //        await context.Response.WriteAsync($"String: {str}\n");
+            //});
 
-            app.MapGet("int", async context =>
-            {
-                ICollection<int> collection = context.RequestServices
-                    .GetRequiredService<ICollection<int>>();
-                collection.Add(collection.Count + 1);
-                foreach (int val in collection)
-                    await context.Response.WriteAsync($"Int: {val}\n");
-            });
+            //app.MapGet("int", async context =>
+            //{
+            //    ICollection<int> collection = context.RequestServices
+            //        .GetRequiredService<ICollection<int>>();
+            //    collection.Add(collection.Count + 1);
+            //    foreach (int val in collection)
+            //        await context.Response.WriteAsync($"Int: {val}\n");
+            //});
             #endregion
             #region services with multiple implementations example
             //app.MapGet("single", async context =>
@@ -217,6 +218,9 @@ namespace Platform
             //// custom class-based middleware
             //app.UseMiddleware<QueryStringMiddleWare>();
             #endregion
+
+            app.MapGet("/", async context =>
+                await context.Response.WriteAsync("Hello World!"));
 
             app.Run();
         }
