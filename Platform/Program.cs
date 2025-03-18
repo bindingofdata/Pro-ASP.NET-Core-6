@@ -11,6 +11,10 @@ namespace Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            #region Enabling Cookie Consent Checking
+            builder.Services.Configure<CookiePolicyOptions>(opts =>
+                opts.CheckConsentNeeded = context => true);
+            #endregion
             #region Logging HTTP requests and responses example
             //builder.Services.AddHttpLogging(opts =>
             //{
@@ -68,12 +72,20 @@ namespace Platform
 
             var app = builder.Build();
 
+            #region enabling cookie consent checking
+            app.UseCookiePolicy();
+            app.UseMiddleware<ConsentMiddleware>();
+            #endregion
             #region using cookies example
             app.MapGet("/cookie", async context =>
             {
                 int counter1 = int.Parse(context.Request.Cookies["counter1"] ?? "0") + 1;
                 context.Response.Cookies.Append("counter1", counter1.ToString(),
-                    new CookieOptions { MaxAge = TimeSpan.FromMinutes(30) });
+                    new CookieOptions
+                    {
+                        MaxAge = TimeSpan.FromMinutes(30),
+                        IsEssential = true
+                    });
 
                 int counter2 = int.Parse(context.Request.Cookies["counter2"] ?? "0") + 1;
                 context.Response.Cookies.Append("counter2", counter2.ToString(),
