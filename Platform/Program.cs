@@ -1,6 +1,7 @@
 //using Platform.Services;
 
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.Extensions.FileProviders;
 
 namespace Platform
 {
@@ -67,9 +68,23 @@ namespace Platform
 
             var app = builder.Build();
 
-            #region logging HTTP requests and responses examples
+            #region using static content and client-side packages example
             app.UseHttpLogging();
+
+            app.UseStaticFiles();
+
+            IWebHostEnvironment env = app.Environment;
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider($"{env.ContentRootPath}/staticfiles"),
+                RequestPath = "/files"
+            });
+
             app.MapGet("population/{city?}", Population.Endpoint);
+            #endregion
+            #region logging HTTP requests and responses examples
+            //app.UseHttpLogging();
+            //app.MapGet("population/{city?}", Population.Endpoint);
             #endregion
             #region generating logging messages examples
             //var logger = app.Services.GetRequiredService<ILoggerFactory>()
