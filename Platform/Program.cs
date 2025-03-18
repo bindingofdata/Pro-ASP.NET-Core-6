@@ -57,7 +57,16 @@ namespace Platform
 
             var app = builder.Build();
 
-            #region Chapter 14 code
+            #region reading user secrets example
+            app.MapGet("config", async (HttpContext context, IConfiguration config) =>
+            {
+                string wsID = config["WebService:Id"];
+                string wsKey = config["WebService:Key"];
+                await context.Response.WriteAsync($"\nThe Secret ID is: {wsID}");
+                await context.Response.WriteAsync($"\nThe Secret Key is: {wsKey}");
+            });
+            #endregion
+            #region chapter 14 code
             //app.UseMiddleware<WeatherMiddleware>();
             #endregion
             #region unbound types in services examples
