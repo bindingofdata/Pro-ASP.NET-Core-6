@@ -2,9 +2,10 @@
 {
     public sealed class Population
     {
-        public static async Task Endpoint(HttpContext context)
+        public static async Task Endpoint(HttpContext context, ILogger<Population> logger)
         {
-            string? city = context.Request.RouteValues["city"] as string ?? "london";
+            logger.LogDebug($"Started process for {context.Request.Path}");
+            string city = context.Request.RouteValues["city"] as string ?? "london";
             int? pop = null;
             switch (city.ToLower())
             {
@@ -26,6 +27,7 @@
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
             }
+            logger.LogDebug($"Finished processing for {context.Request.Path}");
         }
     }
 }

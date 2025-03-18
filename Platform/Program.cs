@@ -57,14 +57,23 @@ namespace Platform
 
             var app = builder.Build();
 
+            #region generating logging messages examples
+            var logger = app.Services.GetRequiredService<ILoggerFactory>()
+                .CreateLogger("Pipeline");
+            logger.LogDebug("Pipeline configuration starting");
+
+            app.MapGet("population/{city?}", Population.Endpoint);
+
+            logger.LogDebug("Pipeline configuration complete");
+            #endregion
             #region reading user secrets example
-            app.MapGet("config", async (HttpContext context, IConfiguration config) =>
-            {
-                string wsID = config["WebService:Id"];
-                string wsKey = config["WebService:Key"];
-                await context.Response.WriteAsync($"\nThe Secret ID is: {wsID}");
-                await context.Response.WriteAsync($"\nThe Secret Key is: {wsKey}");
-            });
+            //app.MapGet("config", async (HttpContext context, IConfiguration config) =>
+            //{
+            //    string wsID = config["WebService:Id"];
+            //    string wsKey = config["WebService:Key"];
+            //    await context.Response.WriteAsync($"\nThe Secret ID is: {wsID}");
+            //    await context.Response.WriteAsync($"\nThe Secret Key is: {wsKey}");
+            //});
             #endregion
             #region chapter 14 code
             //app.UseMiddleware<WeatherMiddleware>();
