@@ -12,12 +12,12 @@ namespace Platform
             var builder = WebApplication.CreateBuilder(args);
 
             #region Logging HTTP requests and responses example
-            builder.Services.AddHttpLogging(opts =>
-            {
-                opts.LoggingFields = HttpLoggingFields.RequestMethod
-                    | HttpLoggingFields.RequestPath
-                    | HttpLoggingFields.ResponseStatusCode;
-            });
+            //builder.Services.AddHttpLogging(opts =>
+            //{
+            //    opts.LoggingFields = HttpLoggingFields.RequestMethod
+            //        | HttpLoggingFields.RequestPath
+            //        | HttpLoggingFields.ResponseStatusCode;
+            //});
             #endregion
             #region Unbound types in services example
             //builder.Services.AddSingleton(typeof(ICollection<>), typeof(List<>));
@@ -69,18 +69,18 @@ namespace Platform
             var app = builder.Build();
 
             #region using static content and client-side packages example
-            app.UseHttpLogging();
+            //app.UseHttpLogging();
 
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
-            IWebHostEnvironment env = app.Environment;
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider = new PhysicalFileProvider($"{env.ContentRootPath}/staticfiles"),
-                RequestPath = "/files"
-            });
+            //IWebHostEnvironment env = app.Environment;
+            //app.UseStaticFiles(new StaticFileOptions
+            //{
+            //    FileProvider = new PhysicalFileProvider($"{env.ContentRootPath}/staticfiles"),
+            //    RequestPath = "/files"
+            //});
 
-            app.MapGet("population/{city?}", Population.Endpoint);
+            //app.MapGet("population/{city?}", Population.Endpoint);
             #endregion
             #region logging HTTP requests and responses examples
             //app.UseHttpLogging();
@@ -266,7 +266,7 @@ namespace Platform
             //app.UseMiddleware<QueryStringMiddleWare>();
             #endregion
 
-            app.MapGet("/", async context =>
+            app.MapFallback(async context =>
                 await context.Response.WriteAsync("Hello World!"));
 
             app.Run();
