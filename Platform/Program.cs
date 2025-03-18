@@ -1,5 +1,7 @@
 //using Platform.Services;
 
+using Microsoft.AspNetCore.HttpLogging;
+
 namespace Platform
 {
     public class Program
@@ -8,6 +10,14 @@ namespace Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            #region Logging HTTP requests and responses example
+            builder.Services.AddHttpLogging(opts =>
+            {
+                opts.LoggingFields = HttpLoggingFields.RequestMethod
+                    | HttpLoggingFields.RequestPath
+                    | HttpLoggingFields.ResponseStatusCode;
+            });
+            #endregion
             #region Unbound types in services example
             //builder.Services.AddSingleton(typeof(ICollection<>), typeof(List<>));
             #endregion
@@ -57,14 +67,18 @@ namespace Platform
 
             var app = builder.Build();
 
-            #region generating logging messages examples
-            var logger = app.Services.GetRequiredService<ILoggerFactory>()
-                .CreateLogger("Pipeline");
-            logger.LogDebug("Pipeline configuration starting");
-
+            #region logging HTTP requests and responses examples
+            app.UseHttpLogging();
             app.MapGet("population/{city?}", Population.Endpoint);
+            #endregion
+            #region generating logging messages examples
+            //var logger = app.Services.GetRequiredService<ILoggerFactory>()
+            //    .CreateLogger("Pipeline");
+            //logger.LogDebug("Pipeline configuration starting");
 
-            logger.LogDebug("Pipeline configuration complete");
+            //app.MapGet("population/{city?}", Population.Endpoint);
+
+            //logger.LogDebug("Pipeline configuration complete");
             #endregion
             #region reading user secrets example
             //app.MapGet("config", async (HttpContext context, IConfiguration config) =>
