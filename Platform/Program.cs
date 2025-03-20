@@ -91,6 +91,7 @@ namespace Platform
                 int counter2 = (context.Session.GetInt32("counter2") ?? 0) + 1;
                 context.Session.SetInt32("counter1", counter1);
                 context.Session.SetInt32("counter2", counter2);
+                await context.Session.CommitAsync();
                 await context.Response.WriteAsync($"Counter1: {counter1}, Counter2: {counter2}");
             });
             #endregion
