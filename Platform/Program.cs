@@ -24,6 +24,13 @@ namespace Platform
                 opts.Cookie.IsEssential = true;
             });
             #endregion
+            #region Enabling HTTP Strict Transport Security
+            builder.Services.AddHsts(opts =>
+            {
+                opts.MaxAge = TimeSpan.FromDays(1);
+                opts.IncludeSubDomains = true;
+            });
+            #endregion
             #region Enabling Cookie Consent Checking
             //builder.Services.Configure<CookiePolicyOptions>(opts =>
             //    opts.CheckConsentNeeded = context => true);
@@ -85,6 +92,12 @@ namespace Platform
 
             var app = builder.Build();
 
+            #region enabling HTTP Strict Transport Security
+            if (app.Environment.IsProduction())
+            {
+                app.UseHsts();
+            }
+            #endregion
             #region configuring the Session Service and Middleware
             app.UseHttpsRedirection();
             app.UseSession();
