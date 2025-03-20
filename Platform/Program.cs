@@ -13,6 +13,11 @@ namespace Platform
 
             #region Configuring the Session Service and Middleware
             builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddHttpsRedirection(opts =>
+            {
+                opts.RedirectStatusCode = StatusCodes.Status307TemporaryRedirect;
+                opts.HttpsPort = 5500;
+            });
             builder.Services.AddSession(opts =>
             {
                 opts.IdleTimeout = TimeSpan.FromMinutes(30);
@@ -81,6 +86,7 @@ namespace Platform
             var app = builder.Build();
 
             #region configuring the Session Service and Middleware
+            app.UseHttpsRedirection();
             app.UseSession();
             app.UseMiddleware<ConsentMiddleware>();
             #endregion
