@@ -11,9 +11,17 @@ namespace Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            #region Configuring the Session Service and Middleware
+            builder.Services.AddDistributedMemoryCache();
+            builder.Services.AddSession(opts =>
+            {
+                opts.IdleTimeout = TimeSpan.FromMinutes(30);
+                opts.Cookie.IsEssential = true;
+            });
+            #endregion
             #region Enabling Cookie Consent Checking
-            builder.Services.Configure<CookiePolicyOptions>(opts =>
-                opts.CheckConsentNeeded = context => true);
+            //builder.Services.Configure<CookiePolicyOptions>(opts =>
+            //    opts.CheckConsentNeeded = context => true);
             #endregion
             #region Logging HTTP requests and responses example
             //builder.Services.AddHttpLogging(opts =>
@@ -72,35 +80,49 @@ namespace Platform
 
             var app = builder.Build();
 
-            #region enabling cookie consent checking
-            app.UseCookiePolicy();
+            #region configuring the Session Service and Middleware
+            app.UseSession();
             app.UseMiddleware<ConsentMiddleware>();
             #endregion
-            #region using cookies example
-            app.MapGet("/cookie", async context =>
+            #region using Session data example
+            app.MapGet("/session", async context =>
             {
-                int counter1 = int.Parse(context.Request.Cookies["counter1"] ?? "0") + 1;
-                context.Response.Cookies.Append("counter1", counter1.ToString(),
-                    new CookieOptions
-                    {
-                        MaxAge = TimeSpan.FromMinutes(30),
-                        IsEssential = true
-                    });
-
-                int counter2 = int.Parse(context.Request.Cookies["counter2"] ?? "0") + 1;
-                context.Response.Cookies.Append("counter2", counter2.ToString(),
-                    new CookieOptions { MaxAge = TimeSpan.FromMinutes(30) });
-
+                int counter1 = (context.Session.GetInt32("counter1") ?? 0) + 1;
+                int counter2 = (context.Session.GetInt32("counter2") ?? 0) + 1;
+                context.Session.SetInt32("counter1", counter1);
+                context.Session.SetInt32("counter2", counter2);
                 await context.Response.WriteAsync($"Counter1: {counter1}, Counter2: {counter2}");
             });
+            #endregion
+            #region enabling cookie consent checking
+            //app.UseCookiePolicy();
+            //app.UseMiddleware<ConsentMiddleware>();
+            #endregion
+            #region using cookies example
+            //app.MapGet("/cookie", async context =>
+            //{
+            //    int counter1 = int.Parse(context.Request.Cookies["counter1"] ?? "0") + 1;
+            //    context.Response.Cookies.Append("counter1", counter1.ToString(),
+            //        new CookieOptions
+            //        {
+            //            MaxAge = TimeSpan.FromMinutes(30),
+            //            IsEssential = true
+            //        });
 
-            app.MapGet("clear", context =>
-            {
-                context.Response.Cookies.Delete("counter1");
-                context.Response.Cookies.Delete("counter2");
-                context.Response.Redirect("/");
-                return Task.CompletedTask;
-            });
+            //    int counter2 = int.Parse(context.Request.Cookies["counter2"] ?? "0") + 1;
+            //    context.Response.Cookies.Append("counter2", counter2.ToString(),
+            //        new CookieOptions { MaxAge = TimeSpan.FromMinutes(30) });
+
+            //    await context.Response.WriteAsync($"Counter1: {counter1}, Counter2: {counter2}");
+            //});
+
+            //app.MapGet("clear", context =>
+            //{
+            //    context.Response.Cookies.Delete("counter1");
+            //    context.Response.Cookies.Delete("counter2");
+            //    context.Response.Redirect("/");
+            //    return Task.CompletedTask;
+            //});
             #endregion
             #region using static content and client-side packages example
             //app.UseHttpLogging();
