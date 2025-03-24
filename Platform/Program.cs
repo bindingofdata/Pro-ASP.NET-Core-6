@@ -92,6 +92,16 @@ namespace Platform
 
             var app = builder.Build();
 
+            #region handling Exceptions and Errors example
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseExceptionHandler("/error.html");
+                app.UseStaticFiles();
+            }
+
+            app.Run(context =>
+                throw new Exception("Something has gone wrong"));
+            #endregion
             #region enabling HTTP Strict Transport Security
             //if (app.Environment.IsProduction())
             //{
