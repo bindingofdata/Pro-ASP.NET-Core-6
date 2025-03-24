@@ -93,29 +93,29 @@ namespace Platform
             var app = builder.Build();
 
             #region handling Exceptions and Errors example
-            if (!app.Environment.IsDevelopment())
-            {
-                app.UseExceptionHandler("/error.html");
-                app.UseStaticFiles();
-            }
+            //if (!app.Environment.IsDevelopment())
+            //{
+            //    app.UseExceptionHandler("/error.html");
+            //    app.UseStaticFiles();
+            //}
 
-            app.UseStatusCodePages("text/html", ResponseString.DefaultResponse);
+            //app.UseStatusCodePages("text/html", ResponseString.DefaultResponse);
 
-            app.Use(async (context, next) =>
-            {
-                if (string.Equals("/error", context.Request.Path))
-                {
-                    context.Response.StatusCode = StatusCodes.Status404NotFound;
-                    await Task.CompletedTask;
-                }
-                else
-                {
-                    await next();
-                }
-            });
+            //app.Use(async (context, next) =>
+            //{
+            //    if (string.Equals("/error", context.Request.Path))
+            //    {
+            //        context.Response.StatusCode = StatusCodes.Status404NotFound;
+            //        await Task.CompletedTask;
+            //    }
+            //    else
+            //    {
+            //        await next();
+            //    }
+            //});
 
-            app.Run(context =>
-                throw new Exception("Something has gone wrong"));
+            //app.Run(context =>
+            //    throw new Exception("Something has gone wrong"));
             #endregion
             #region enabling HTTP Strict Transport Security
             //if (app.Environment.IsProduction())
@@ -372,6 +372,9 @@ namespace Platform
             //// custom class-based middleware
             //app.UseMiddleware<QueryStringMiddleWare>();
             #endregion
+
+            app.MapGet("/", async context =>
+                await context.Response.WriteAsync("Hello World!"));
 
             app.Run();
         }
