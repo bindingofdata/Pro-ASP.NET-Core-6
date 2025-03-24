@@ -99,6 +99,21 @@ namespace Platform
                 app.UseStaticFiles();
             }
 
+            app.UseStatusCodePages("text/html", ResponseString.DefaultResponse);
+
+            app.Use(async (context, next) =>
+            {
+                if (string.Equals("/error", context.Request.Path))
+                {
+                    context.Response.StatusCode = StatusCodes.Status404NotFound;
+                    await Task.CompletedTask;
+                }
+                else
+                {
+                    await next();
+                }
+            });
+
             app.Run(context =>
                 throw new Exception("Something has gone wrong"));
             #endregion
