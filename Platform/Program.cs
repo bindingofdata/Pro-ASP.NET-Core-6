@@ -92,6 +92,9 @@ namespace Platform
 
             var app = builder.Build();
 
+            #region caching data example
+            app.MapEndpoint<SumEndpoint>("/sum/{count:int=1000000000}");
+            #endregion
             #region handling Exceptions and Errors example
             //if (!app.Environment.IsDevelopment())
             //{
