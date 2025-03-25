@@ -11,6 +11,10 @@ namespace Platform
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            #region Caching data example
+            builder.Services.AddDistributedMemoryCache(opts =>
+                opts.SizeLimit = 200);
+            #endregion
             #region Configuring the Session Service and Middleware
             //builder.Services.AddDistributedMemoryCache();
             //builder.Services.AddHttpsRedirection(opts =>
