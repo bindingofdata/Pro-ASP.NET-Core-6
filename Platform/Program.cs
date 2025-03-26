@@ -1,4 +1,4 @@
-//using Platform.Services;
+using Platform.Services;
 
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.FileProviders;
@@ -23,6 +23,10 @@ namespace Platform
                 opts.SchemaName = "dbo";
                 opts.TableName = "DataCache";
             });
+
+            // Caching responses
+            builder.Services.AddResponseCaching();
+            builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
             #endregion
             #region Configuring the Session Service and Middleware
             //builder.Services.AddDistributedMemoryCache();
@@ -106,6 +110,9 @@ namespace Platform
             var app = builder.Build();
 
             #region caching data example
+            // Caching responses
+            app.UseResponseCaching();
+
             app.MapEndpoint<SumEndpoint>("/sum/{count:int=1000000000}");
             #endregion
             #region handling Exceptions and Errors example
