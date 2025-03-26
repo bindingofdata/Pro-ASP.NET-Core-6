@@ -2,6 +2,8 @@ using Platform.Services;
 
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.FileProviders;
+using Platform.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Platform
 {
@@ -27,6 +29,10 @@ namespace Platform
             // Caching responses
             builder.Services.AddResponseCaching();
             builder.Services.AddSingleton<IResponseFormatter, HtmlResponseFormatter>();
+
+            // Configuring DB service
+            builder.Services.AddDbContext<CalculationContext>(opts =>
+                opts.UseSqlServer(builder.Configuration["ConnectionStrings:CalcConnection"]));
             #endregion
             #region Configuring the Session Service and Middleware
             //builder.Services.AddDistributedMemoryCache();
