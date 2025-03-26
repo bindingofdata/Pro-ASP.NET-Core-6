@@ -21,7 +21,7 @@ namespace Platform
                 await cache.SetStringAsync(cacheKey, totalString,
                     new DistributedCacheEntryOptions
                     {
-                        AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(15)
+                        AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30)
                     });
             }
             await context.Response.WriteAsync(
