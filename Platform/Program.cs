@@ -33,6 +33,9 @@ namespace Platform
             // Configuring DB service
             builder.Services.AddDbContext<CalculationContext>(opts =>
                 opts.UseSqlServer(builder.Configuration["ConnectionStrings:CalcConnection"]));
+
+            // Configure DB Seeding service
+            builder.Services.AddTransient<SeedData>();
             #endregion
             #region Configuring the Session Service and Middleware
             //builder.Services.AddDistributedMemoryCache();
@@ -405,7 +408,19 @@ namespace Platform
             app.MapGet("/", async context =>
                 await context.Response.WriteAsync("Hello World!"));
 
-            app.Run();
+            #region database seeding example
+            bool cmdLineInit = (app.Configuration["INITDB"] ?? "false") == "true";
+            if (app.Environment.IsDevelopment() || cmdLineInit)
+            {
+                SeedData seedData = app.Services.GetRequiredService<SeedData>();
+                seedData.SeedDatabase();
+            }
+
+            if (!cmdLineInit)
+            {
+                app.Run();
+            }
+            #endregion
         }
     }
 }
