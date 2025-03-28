@@ -7,18 +7,24 @@ namespace WebApp.Controllers
     [Route("api/[controller]")]
     public sealed class ProductsController : ControllerBase
     {
+        private readonly DataContext _context;
+
+        public ProductsController(DataContext dataContext)
+        {
+            _context = dataContext;
+        }
+
         [HttpGet]
         public IEnumerable<Product> GetProducts()
         {
-            return [
-                new Product { ProductId = 1, Name = "Product 1" },
-                new Product { ProductId = 2, Name = "Product 2" }];
+            return _context.Products;
         }
 
         [HttpGet("{id}")]
-        public Product GetProduct()
+        public Product? GetProduct(long id, [FromServices]ILogger<ProductsController> logger)
         {
-            return new Product() { ProductId = 1, Name = "Product 1" };
+            logger.LogDebug("GetProduct Action Invoked");
+            return _context.Products.Find(id);
         }
     }
 }
