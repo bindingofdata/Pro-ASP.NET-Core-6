@@ -15,37 +15,36 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Product> GetProducts()
+        public IAsyncEnumerable<Product> GetProductsAsync()
         {
-            return _context.Products;
+            return _context.Products.AsAsyncEnumerable();
         }
 
         [HttpGet("{id}")]
-        public Product? GetProduct(long id, [FromServices]ILogger<ProductsController> logger)
+        public async Task<Product?> GetProductAsync(long id)
         {
-            logger.LogDebug("GetProduct Action Invoked");
-            return _context.Products.Find(id);
+            return await _context.Products.FindAsync(id);
         }
 
         [HttpPost]
-        public void SaveProduct([FromBody] Product product)
+        public async void SaveProductAsync([FromBody] Product product)
         {
-            _context.Products.Add(product);
-            _context.SaveChanges();
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
         }
 
         [HttpPut]
-        public void UpdateProduct([FromBody] Product product)
+        public async void UpdateProductAsync([FromBody] Product product)
         {
             _context.Products.Update(product);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         [HttpDelete("{id}")]
-        public void DeleteProduct(long id)
+        public async void DeleteProductAsync(long id)
         {
             _context.Products.Remove(new Product { ProductId = id });
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }
