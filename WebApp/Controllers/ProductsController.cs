@@ -27,21 +27,21 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async void SaveProductAsync([FromBody] Product product)
+        public async Task SaveProductAsync([FromBody] ProductBindingTarget target)
         {
-            await _context.Products.AddAsync(product);
+            await _context.Products.AddAsync(target.ToProduct());
             await _context.SaveChangesAsync();
         }
 
         [HttpPut]
-        public async void UpdateProductAsync([FromBody] Product product)
+        public async Task UpdateProductAsync([FromBody] Product product)
         {
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
         }
 
         [HttpDelete("{id}")]
-        public async void DeleteProductAsync(long id)
+        public async Task DeleteProductAsync(long id)
         {
             _context.Products.Remove(new Product { ProductId = id });
             await _context.SaveChangesAsync();
