@@ -15,15 +15,15 @@ namespace WebApp.Controllers
         }
 
         [HttpGet]
-        public IAsyncEnumerable<Product> GetProductsAsync()
+        public IAsyncEnumerable<Product> GetProducts()
         {
             return _context.Products.AsAsyncEnumerable();
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProductAsync(long id)
+        public async Task<IActionResult> GetProduct(long id)
         {
-            Product product = await _context.Products.FindAsync(id);
+            Product? product = await _context.Products.FindAsync(id);
             if (product == null)
                 return NotFound();
 
@@ -31,7 +31,7 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveProductAsync([FromBody] ProductBindingTarget target)
+        public async Task<IActionResult> SaveProduct([FromBody] ProductBindingTarget target)
         {
             Product product = target.ToProduct();
             await _context.Products.AddAsync(product);
@@ -40,17 +40,28 @@ namespace WebApp.Controllers
         }
 
         [HttpPut]
-        public async Task UpdateProductAsync([FromBody] Product product)
+        public async Task UpdateProduct([FromBody] Product product)
         {
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
         }
 
         [HttpDelete("{id}")]
-        public async Task DeleteProductAsync(long id)
+        public async Task DeleteProduct(long id)
         {
             _context.Products.Remove(new Product { ProductId = id });
             await _context.SaveChangesAsync();
+        }
+
+        [HttpGet("redirect")]
+        public IActionResult Redirect()
+        {
+            // basic redirect
+            //return Redirect("/api/products/1");
+
+            // redirect to an Action Method
+            // NOTE: does not work with method names that end with "Async"
+            return RedirectToAction(nameof(GetProduct), new { Id = 1 });
         }
     }
 }
