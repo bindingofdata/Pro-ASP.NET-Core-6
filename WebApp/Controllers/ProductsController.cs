@@ -21,16 +21,22 @@ namespace WebApp.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<Product?> GetProductAsync(long id)
+        public async Task<IActionResult> GetProductAsync(long id)
         {
-            return await _context.Products.FindAsync(id);
+            Product product = await _context.Products.FindAsync(id);
+            if (product == null)
+                return NotFound();
+
+            return Ok(product);
         }
 
         [HttpPost]
-        public async Task SaveProductAsync([FromBody] ProductBindingTarget target)
+        public async Task<IActionResult> SaveProductAsync([FromBody] ProductBindingTarget target)
         {
-            await _context.Products.AddAsync(target.ToProduct());
+            Product product = target.ToProduct();
+            await _context.Products.AddAsync(product);
             await _context.SaveChangesAsync();
+            return Ok(product);
         }
 
         [HttpPut]
