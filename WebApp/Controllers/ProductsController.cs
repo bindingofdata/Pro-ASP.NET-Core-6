@@ -4,6 +4,7 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public sealed class ProductsController : ControllerBase
     {
@@ -31,21 +32,28 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveProduct([FromBody] ProductBindingTarget target)
+        public async Task<IActionResult> SaveProduct(ProductBindingTarget target)
         {
-            if (ModelState.IsValid)
-            {
-                Product product = target.ToProduct();
-                await _context.Products.AddAsync(product);
-                await _context.SaveChangesAsync();
-                return Ok(product);
-            }
+            Product product = target.ToProduct();
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
+            return Ok(product);
 
-            return BadRequest(ModelState);
+            // basic data validation without [ApiController]
+            // requires [FromBody] attribute on the parameter
+            //if (ModelState.IsValid)
+            //{
+            //    Product product = target.ToProduct();
+            //    await _context.Products.AddAsync(product);
+            //    await _context.SaveChangesAsync();
+            //    return Ok(product);
+            //}
+
+            //return BadRequest(ModelState);
         }
 
         [HttpPut]
-        public async Task UpdateProduct([FromBody] Product product)
+        public async Task UpdateProduct(Product product)
         {
             _context.Products.Update(product);
             await _context.SaveChangesAsync();
