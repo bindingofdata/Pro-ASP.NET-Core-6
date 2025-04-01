@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
 
 namespace WebApp.Models
 {
@@ -14,6 +16,8 @@ namespace WebApp.Models
         public Category? Category { get; set; }
 
         public long SupplierId { get; set; }
+        // prevent specific property from being serialized when null
+        //[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public Supplier? Supplier { get; set; }
     }
 }

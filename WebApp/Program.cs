@@ -1,7 +1,7 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
-using WebApp;
 using WebApp.Models;
+using System.Text.Json.Serialization;
 
 const string BASE_URL = "api/products";
 
@@ -15,6 +15,10 @@ builder.Services.AddDbContext<DataContext>(opts =>
 
 #region Controller examples
 builder.Services.AddControllers();
+
+// prevent all properties from being serialized when null
+builder.Services.Configure<JsonOptions>(opts =>
+    opts.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 #endregion
 
 var app = builder.Build();
