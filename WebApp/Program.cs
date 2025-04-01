@@ -14,11 +14,17 @@ builder.Services.AddDbContext<DataContext>(opts =>
     opts.EnableSensitiveDataLogging();
 });
 
-#region JSON PATCH example
-builder.Services.AddControllers().AddNewtonsoftJson();
+#region XML formatting example
+builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
 
 builder.Services.Configure<MvcNewtonsoftJsonOptions>(opts =>
     opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
+#endregion
+#region JSON PATCH example
+//builder.Services.AddControllers().AddNewtonsoftJson();
+
+//builder.Services.Configure<MvcNewtonsoftJsonOptions>(opts =>
+//    opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 #endregion
 #region Controller examples
 //builder.Services.AddControllers();

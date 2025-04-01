@@ -20,7 +20,16 @@ namespace WebApp.Controllers
         public string GetString() => "This is a string response";
 
         [HttpGet("object")]
-        public async Task<Product> GetObject() =>
-            await _context.Products.FirstAsync();
+        public async Task<ProductBindingTarget> GetObject()
+        {
+            Product product = await _context.Products.FirstAsync();
+            return new ProductBindingTarget
+            {
+                Name = product.Name,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                SupplierId = product.SupplierId
+            };
+        }
     }
 }
