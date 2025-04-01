@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using Newtonsoft.Json;
+using Microsoft.OpenApi.Models;
 //using System.Text.Json.Serialization;
 
 const string BASE_URL = "api/products";
@@ -27,6 +28,10 @@ builder.Services.Configure<MvcOptions>(opts =>
     opts.ReturnHttpNotAcceptable = true;
 });
 #endregion
+#region OpenAPI/Swagger example
+builder.Services.AddSwaggerGen(setup =>
+    setup.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApp", Version = "v1" }));
+#endregion
 #region JSON PATCH example
 //builder.Services.AddControllers().AddNewtonsoftJson();
 
@@ -45,6 +50,11 @@ var app = builder.Build();
 
 #region Controller examples
 app.MapControllers();
+#endregion
+#region OpenAPI/Swagger example
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApp"));
 #endregion
 #region Minimal API examples
 //// get a specific product
