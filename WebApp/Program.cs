@@ -15,7 +15,7 @@ builder.Services.AddDbContext<DataContext>(opts =>
     opts.EnableSensitiveDataLogging();
 });
 
-builder.Services.AddControllers();
+builder.Services.AddControllersWithViews();
 
 #region XML formatting example
 //builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
@@ -52,6 +52,7 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.MapControllers();
+app.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
 #region Controller examples
 //app.MapControllers();
 #endregion
