@@ -33,10 +33,15 @@ namespace WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveProduct([FromBody] ProductBindingTarget target)
         {
-            Product product = target.ToProduct();
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
-            return Ok(product);
+            if (ModelState.IsValid)
+            {
+                Product product = target.ToProduct();
+                await _context.Products.AddAsync(product);
+                await _context.SaveChangesAsync();
+                return Ok(product);
+            }
+
+            return BadRequest(ModelState);
         }
 
         [HttpPut]
@@ -61,6 +66,7 @@ namespace WebApp.Controllers
 
             // redirect to an Action Method
             // NOTE: does not work with method names that end with "Async"
+            // https://www.josephguadagno.net/2020/07/01/no-route-matches-the-supplied-values
             return RedirectToAction(nameof(GetProduct), new { Id = 1 });
         }
     }
