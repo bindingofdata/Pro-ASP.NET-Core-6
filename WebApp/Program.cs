@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
+//using System.Text.Json.Serialization;
 
 const string BASE_URL = "api/products";
 
@@ -13,12 +14,18 @@ builder.Services.AddDbContext<DataContext>(opts =>
     opts.EnableSensitiveDataLogging();
 });
 
+#region JSON PATCH example
+builder.Services.AddControllers().AddNewtonsoftJson();
+
+builder.Services.Configure<MvcNewtonsoftJsonOptions>(opts =>
+    opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
+#endregion
 #region Controller examples
-builder.Services.AddControllers();
+//builder.Services.AddControllers();
 
 // prevent all properties from being serialized when null
-builder.Services.Configure<JsonOptions>(opts =>
-    opts.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
+//builder.Services.Configure<JsonOptions>(opts =>
+//    opts.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
 #endregion
 
 var app = builder.Build();

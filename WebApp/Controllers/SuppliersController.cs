@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 using WebApp.Models;
@@ -26,6 +27,19 @@ namespace WebApp.Controllers
             {
                 foreach (Product product in supplier.Products)
                     product.Supplier = null;
+            }
+
+            return supplier;
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<Supplier?> PatchSupplier(long id, JsonPatchDocument<Supplier> patch)
+        {
+            Supplier? supplier = await _context.Suppliers.FindAsync(id);
+            if (supplier != null)
+            {
+                patch.ApplyTo(supplier);
+                await _context.SaveChangesAsync();
             }
 
             return supplier;
