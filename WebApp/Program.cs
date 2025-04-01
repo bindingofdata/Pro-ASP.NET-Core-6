@@ -15,22 +15,24 @@ builder.Services.AddDbContext<DataContext>(opts =>
     opts.EnableSensitiveDataLogging();
 });
 
-#region XML formatting example
-builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
+builder.Services.AddControllers();
 
-builder.Services.Configure<MvcNewtonsoftJsonOptions>(opts =>
-    opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
+#region XML formatting example
+//builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
+
+//builder.Services.Configure<MvcNewtonsoftJsonOptions>(opts =>
+//    opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 #endregion
 #region Accept header support example
-builder.Services.Configure<MvcOptions>(opts =>
-{
-    opts.RespectBrowserAcceptHeader = true;
-    opts.ReturnHttpNotAcceptable = true;
-});
+//builder.Services.Configure<MvcOptions>(opts =>
+//{
+//    opts.RespectBrowserAcceptHeader = true;
+//    opts.ReturnHttpNotAcceptable = true;
+//});
 #endregion
 #region OpenAPI/Swagger example
-builder.Services.AddSwaggerGen(setup =>
-    setup.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApp", Version = "v1" }));
+//builder.Services.AddSwaggerGen(setup =>
+//    setup.SwaggerDoc("v1", new OpenApiInfo { Title = "WebApp", Version = "v1" }));
 #endregion
 #region JSON PATCH example
 //builder.Services.AddControllers().AddNewtonsoftJson();
@@ -48,13 +50,15 @@ builder.Services.AddSwaggerGen(setup =>
 
 var app = builder.Build();
 
-#region Controller examples
+app.UseStaticFiles();
 app.MapControllers();
+#region Controller examples
+//app.MapControllers();
 #endregion
 #region OpenAPI/Swagger example
-app.UseSwagger();
-app.UseSwaggerUI(options =>
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApp"));
+//app.UseSwagger();
+//app.UseSwaggerUI(options =>
+//    options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApp"));
 #endregion
 #region Minimal API examples
 //// get a specific product
@@ -87,8 +91,6 @@ app.UseSwaggerUI(options =>
 //    }
 //});
 #endregion
-
-app.MapGet("/", () => "Hello World!");
 
 DataContext context = app.Services
     .CreateScope().ServiceProvider
