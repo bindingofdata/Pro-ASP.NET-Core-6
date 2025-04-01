@@ -20,6 +20,13 @@ builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
 builder.Services.Configure<MvcNewtonsoftJsonOptions>(opts =>
     opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore);
 #endregion
+#region Accept header support example
+builder.Services.Configure<MvcOptions>(opts =>
+{
+    opts.RespectBrowserAcceptHeader = true;
+    opts.ReturnHttpNotAcceptable = true;
+});
+#endregion
 #region JSON PATCH example
 //builder.Services.AddControllers().AddNewtonsoftJson();
 
