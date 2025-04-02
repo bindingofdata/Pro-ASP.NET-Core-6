@@ -9,7 +9,7 @@ namespace WebApp.Controllers
     [Route("api/[controller]")]
     public sealed class ContentController : ControllerBase
     {
-        private DataContext _context;
+        private readonly DataContext _context;
 
         public ContentController(DataContext dataContext)
         {
