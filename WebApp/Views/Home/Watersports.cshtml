@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@* Specifying the model here allows for additional compile time checks *@
+@model WebApp.Models.Product
+<!DOCTYPE html>
 <html>
     <head>
         <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
@@ -11,6 +13,9 @@
                     <tr><th>Name</th><td>@Model?.Name</td></tr>
                     <tr><th>Price</th><td>@Model?.Price.ToString("c")</td></tr>
                     <tr><th>Category ID</th><td>@Model?.CategoryId</td></tr>
+                    <tr><th>Supplier ID</th><td>@Model?.SupplierId</td></tr>
+                    @* This property will cause a runtime error if the model is not specified *@
+                    @* <tr><th>Category ID</th><td>@Model?.TaxRate</td></tr> *@
                 </tbody>
             </table>
         </div>
