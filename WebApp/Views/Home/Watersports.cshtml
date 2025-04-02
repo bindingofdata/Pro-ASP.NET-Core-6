@@ -2,26 +2,65 @@
 @model Product
 <!DOCTYPE html>
 <html>
-    <head>
-        <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
-    </head>
-    <body>
-        <h6 class="bg-secondary text-white text-center m-2 p-2">Watersports</h6>
-        <div class="m-2">
-            <table class="table table-sm table-striped table-bordered" data-id="@Model?.ProductId">
-                <tbody>
-                    <tr><th>Name</th><td>@Model?.Name</td></tr>
-                    <tr><th>Price</th><td>@Model?.Price.ToString("c")</td></tr>
-                    <tr><th>Category ID</th><td>@Model?.CategoryId</td></tr>
-                    <tr><th>Supplier ID</th><td>@Model?.SupplierId</td></tr>
-                    @* This property will cause a runtime error if the model is not specified *@
-                    @* <tr><th>Category ID</th><td>@Model?.TaxRate</td></tr> *@
-                    @* This property is treated as a string *@
-                    <tr><th>Tax String</th><td>@Model?.Price * 0.2m</td></tr>
-                    @* This property is treated as an expression *@
-                    <tr><th>Tax Expression</th><td>@(Model?.Price * 0.2m)</td></tr>
-                </tbody>
-            </table>
-        </div>
-    </body>
+<head>
+    <link href="/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+</head>
+<body>
+    <h6 class="bg-secondary text-white text-center m-2 p-2">Watersports</h6>
+    <div class="m-2">
+        <table class="table table-sm table-striped table-bordered" data-id="@Model?.ProductId">
+            <tbody>
+                @* Example if condition *@
+                @* @if (Model?.Price > 200) *@
+                @* { *@
+                @*     <tr><th>Name</th><td>Luxury @Model?.Name</td></tr> *@
+                @* } *@
+                @* else *@
+                @* { *@
+                @*     <tr><th>Name</th><td>Basic @Model?.Name</td></tr> *@
+                @* } *@
+
+                @* Example basic switch expression *@
+                @* @switch (Model?.Name) *@
+                @* { *@
+                @*     case "Kayak": *@
+                @*         <tr><th>Name</th><td>Small Boat</td></tr> *@
+                @*         break; *@
+                @*     case "LifeJacket": *@
+                @*         <tr><th>Name</th><td>Flotation Aid</td></tr> *@
+                @*         break; *@
+                @*     default: *@
+                @*         <tr><th>Name</th><td>@Model?.Name</td></tr> *@
+                @*         break; *@
+                @* } *@
+
+                @* Example inline switch expression *@
+                @* Includes examples of defining the text to display *@
+                <tr><th>Name</th><td>
+                    @switch (Model?.Name)
+                    {
+                        case "Kayak":
+                            @:Small Boat
+                            break;
+                        case "LifeJacket":
+                            <text>Flotation Aid</text>
+                            break;
+                        default:
+                            @Model?.Name
+                            break;
+                    }
+                </td></tr>
+                <tr><th>Price</th><td>@Model?.Price.ToString("c")</td></tr>
+                <tr><th>Category ID</th><td>@Model?.CategoryId</td></tr>
+                <tr><th>Supplier ID</th><td>@Model?.SupplierId</td></tr>
+                @* This property will cause a runtime error if the model is not specified *@
+                @* <tr><th>Category ID</th><td>@Model?.TaxRate</td></tr> *@
+                @* This property is treated as a string *@
+                <tr><th>Tax String</th><td>@Model?.Price * 0.2m</td></tr>
+                @* This property is treated as an expression *@
+                <tr><th>Tax Expression</th><td>@(Model?.Price * 0.2m)</td></tr>
+            </tbody>
+        </table>
+    </div>
+</body>
 </html>
