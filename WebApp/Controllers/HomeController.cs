@@ -21,5 +21,10 @@ namespace WebApp.Controllers
             else
                 return View(product);
         }
+
+        public IActionResult Common()
+        {
+            return View();
+        }
     }
 }
