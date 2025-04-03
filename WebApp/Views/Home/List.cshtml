@@ -18,11 +18,7 @@
                 <tbody>
                 @foreach (Product product in Model ?? Enumerable.Empty<Product>())
                 {
-                    <tr>
-                        <td>@product.Name</td>
-                        <td>@product.Price.ToString("c")</td>
-                        <td>@((product.Price / average * 100).ToString("F1"))% of average</td>
-                    </tr>
+                    <partial name="_RowPartial" model="product" />
                 }
                 </tbody>
             </table>
