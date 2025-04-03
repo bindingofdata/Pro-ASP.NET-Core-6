@@ -17,6 +17,10 @@ builder.Services.AddDbContext<DataContext>(opts =>
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(opts =>
+    opts.Cookie.IsEssential = true);
+
 #region XML formatting example
 //builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
 
@@ -51,6 +55,7 @@ builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 app.UseStaticFiles();
+app.UseSession();
 app.MapControllers();
 // convention routing example
 //app.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
