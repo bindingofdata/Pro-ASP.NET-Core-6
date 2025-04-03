@@ -1,0 +1,16 @@
+﻿@model string
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="~/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+    </head>
+    <body>
+        @* String is used as a string literal *@
+        <div class="bg-secondary text-white text-center m-2 p-2">@Model</div>
+        @* String is parsed as HTML and rendered; potentially unsafe *@
+        <div class="bg-secondary text-white text-center m-2 p-2">@Html.Raw(Model)</div>
+    </body>
+</html>

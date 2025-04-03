@@ -25,6 +25,11 @@ namespace WebApp.Controllers
             return View(_context.Products);
         }
 
+        public IActionResult Html()
+        {
+            return View((object)"This is a <h3><i>string</i></h3>");
+        }
+
         // Return different views based on boolean check example
         //public async Task<IActionResult> Index(long id = 1)
         //{
