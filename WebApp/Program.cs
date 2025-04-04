@@ -16,6 +16,7 @@ builder.Services.AddDbContext<DataContext>(opts =>
 });
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opts =>
@@ -60,6 +61,7 @@ app.MapControllers();
 // convention routing example
 //app.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
 app.MapDefaultControllerRoute();
+app.MapRazorPages();
 #region Controller examples
 //app.MapControllers();
 #endregion
