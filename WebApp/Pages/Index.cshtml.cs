@@ -16,9 +16,14 @@ namespace WebApp.Pages
             _context = dataContext;
         }
 
-        public async Task OnGetAsync(long id = 1)
+        public async Task<IActionResult> OnGetAsync(long id = 1)
         {
             Product = await _context.Products.FindAsync(id);
+            if (Product == null)
+            {
+                return RedirectToPage("NotFound");
+            }
+            return Page();
         }
     }
 }
