@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using Newtonsoft.Json;
@@ -21,6 +21,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(opts =>
     opts.Cookie.IsEssential = true);
+
+builder.Services.Configure<RazorPagesOptions>(opts =>
+    opts.Conventions.AddPageRoute("/Index", "/extra/page/{id:long?}"));
 
 #region XML formatting example
 //builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
