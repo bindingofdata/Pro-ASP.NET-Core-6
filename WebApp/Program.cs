@@ -25,6 +25,8 @@ builder.Services.AddSession(opts =>
 builder.Services.Configure<RazorPagesOptions>(opts =>
     opts.Conventions.AddPageRoute("/Index", "/extra/page/{id:long?}"));
 
+builder.Services.AddSingleton<CitiesData>();
+
 #region XML formatting example
 //builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
 
