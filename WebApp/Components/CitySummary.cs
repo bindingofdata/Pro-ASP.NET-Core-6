@@ -15,16 +15,14 @@ namespace WebApp.Components
             _data = data;
         }
 
-        public string Invoke()
+        public IViewComponentResult Invoke(string themeName)
         {
-            if (RouteData.Values["controller"] != null)
+            ViewBag.Theme = themeName;
+            return View(new CityViewModel
             {
-                return "Controller Request";
-            }
-            else
-            {
-                return "Razor Page Request";
-            }
+                Cities = _data.Cities.Count,
+                Population = _data.Cities.Sum(city => city.Population),
+            });
         }
     }
 }
