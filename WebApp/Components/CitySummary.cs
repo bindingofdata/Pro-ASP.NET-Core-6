@@ -13,10 +13,13 @@ namespace WebApp.Components
             _data = data;
         }
 
-        public string Invoke()
+        public IViewComponentResult Invoke()
         {
-            return $"{_data.Cities.Count} cities, "
-                + $"{_data.Cities.Sum(city => city.Population)}";
+            return View(new CityViewModel
+            {
+                Cities = _data.Cities.Count,
+                Population = _data.Cities.Sum(c => c.Population),
+            });
         }
     }
 }
