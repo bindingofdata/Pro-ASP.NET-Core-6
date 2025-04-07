@@ -15,21 +15,16 @@ namespace WebApp.Components
             _data = data;
         }
 
-        public IViewComponentResult Invoke()
+        public string Invoke()
         {
-            // Return HtmlContentViewComponentResult example
-            return new HtmlContentViewComponentResult(
-                new HtmlString("This is a <h3><i>string</i></h3>"));
-
-            // Return ContentViewComponentResult example
-            //return Content("This is a <h3><i>string</i></h3>");
-
-            // Return partial view example
-            //return View(new CityViewModel
-            //{
-            //    Cities = _data.Cities.Count,
-            //    Population = _data.Cities.Sum(c => c.Population),
-            //});
+            if (RouteData.Values["controller"] != null)
+            {
+                return "Controller Request";
+            }
+            else
+            {
+                return "Razor Page Request";
+            }
         }
     }
 }
