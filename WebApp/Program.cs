@@ -17,16 +17,16 @@ builder.Services.AddDbContext<DataContext>(opts =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(opts =>
-    opts.Cookie.IsEssential = true);
-
-builder.Services.Configure<RazorPagesOptions>(opts =>
-    opts.Conventions.AddPageRoute("/Index", "/extra/page/{id:long?}"));
-
 builder.Services.AddSingleton<CitiesData>();
 
+#region Razor Pages examples
+//builder.Services.AddDistributedMemoryCache();
+//builder.Services.AddSession(opts =>
+//    opts.Cookie.IsEssential = true);
+
+//builder.Services.Configure<RazorPagesOptions>(opts =>
+//    opts.Conventions.AddPageRoute("/Index", "/extra/page/{id:long?}"));
+#endregion
 #region XML formatting example
 //builder.Services.AddControllers().AddXmlDataContractSerializerFormatters();
 
@@ -61,12 +61,15 @@ builder.Services.AddSingleton<CitiesData>();
 var app = builder.Build();
 
 app.UseStaticFiles();
-app.UseSession();
 app.MapControllers();
-// convention routing example
-//app.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
 app.MapDefaultControllerRoute();
 app.MapRazorPages();
+
+#region Razor Pages examples
+//app.UseSession();
+// convention routing example
+//app.MapControllerRoute("Default", "{controller=Home}/{action=Index}/{id?}");
+#endregion
 #region Controller examples
 //app.MapControllers();
 #endregion
