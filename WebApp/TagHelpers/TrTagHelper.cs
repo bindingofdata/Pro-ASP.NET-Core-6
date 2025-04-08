@@ -2,7 +2,15 @@
 
 namespace WebApp.TagHelpers
 {
-    [HtmlTargetElement("tr", Attributes = "bg-color,text-color", ParentTag = "thead")]
+    // Narrow tag helper scope example
+    //[HtmlTargetElement("tr", Attributes = "bg-color,text-color", ParentTag = "thead")]
+
+    // Widen tag helper scope to any elements example
+    //[HtmlTargetElement("*", Attributes = "bg-color,text-color")]
+
+    // Widen tag helper scope to specific elements example
+    [HtmlTargetElement("tr", Attributes = "bg-color,text-color")]
+    [HtmlTargetElement("td", Attributes = "bg-color")]
     public sealed class TrTagHelper : TagHelper
     {
         public string BgColor { get; set; } = "dark";
@@ -10,7 +18,7 @@ namespace WebApp.TagHelpers
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.Attributes.SetAttribute("class", $"bg-{BgColor} text-{TextColor} text-center");
+            output.Attributes.SetAttribute("class", $"bg-{BgColor} text-{TextColor}");
         }
     }
 }
