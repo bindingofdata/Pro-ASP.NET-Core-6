@@ -8,8 +8,17 @@
 <table class="table table-sm table-striped table-bordered">
     <tablehead bg-color="dark">Product Summary</tablehead>
     <tbody>
-        <tr for="Name"/>
-        <tr for="Price" format="c"/>
-        <tr for="CategoryId"/>
+        <tr theme="primary">
+            <th>Name</th>
+            <td>@Model?.Name</td>
+        </tr>
+        <tr theme="secondary">
+            <th>Price</th>
+            <td>@Model?.Price.ToString("c")</td>
+        </tr>
+        <tr theme="info">
+            <th>Category</th>
+            <td>@Model?.CategoryId</td>
+        </tr>
     </tbody>
 </table>
