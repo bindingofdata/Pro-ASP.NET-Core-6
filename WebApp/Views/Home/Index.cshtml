@@ -4,11 +4,7 @@
 }
 
 <table class="table table-sm table-striped table-bordered">
-    <thead>
-        <tr bg-color="info" text-color="white">
-            <th colspan="2">Product Summary</th>
-        </tr>
-    </thead>
+    <tablehead bg-color="dark">Product Summary</tablehead>
     <tbody>
         <tr><td>Name</td><td>@Model?.Name</td></tr>
         <tr><td bg-color="dark">Price</td><td>@Model?.Price.ToString("c")</td></tr>
