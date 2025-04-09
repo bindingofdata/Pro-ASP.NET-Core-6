@@ -9,7 +9,7 @@ namespace WebApp.Pages
     {
         private readonly DataContext _context;
 
-        public Product? Product { get; set; }
+        public Product Product { get; set; } = new();
 
         public EditorModel(DataContext dataContext)
         {
@@ -18,7 +18,7 @@ namespace WebApp.Pages
 
         public async Task OnGetAsync(long id)
         {
-            Product = await _context.Products.FindAsync(id);
+            Product = await _context.Products.FindAsync(id) ?? new();
         }
 
         public async Task<IActionResult> OnPostAsync(long id, decimal price)
