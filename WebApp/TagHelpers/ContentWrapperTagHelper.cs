@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace WebApp.TagHelpers
 {
     [HtmlTargetElement("*", Attributes = "[wrap=true]")]
-    public class ContentWrapperTagHelper : TagHelper
+    public sealed class ContentWrapperTagHelper : TagHelper
     {
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {

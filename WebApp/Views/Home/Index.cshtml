@@ -8,8 +8,8 @@
 <table class="table table-sm table-striped table-bordered">
     <tablehead bg-color="dark">Product Summary</tablehead>
     <tbody>
-        <tr><td>Name</td><td>@Model?.Name</td></tr>
-        <tr><td bg-color="dark">Price</td><td>@Model?.Price.ToString("c")</td></tr>
-        <tr><td>Category ID</td><td>@Model?.CategoryId</td></tr>
+        <tr><th>Name</th><td highlight="true">@Model?.Name</td></tr>
+        <tr><th bg-color="dark">Price</th><td>@Model?.Price.ToString("c")</td></tr>
+        <tr><th>Category ID</th><td>@Model?.CategoryId</td></tr>
     </tbody>
 </table>
