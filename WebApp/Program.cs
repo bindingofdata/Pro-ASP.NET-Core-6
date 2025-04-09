@@ -21,6 +21,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<CitiesData>();
 builder.Services.AddTransient<ITagHelperComponent, TimeTagHelperComponent>();
+builder.Services.AddTransient<ITagHelperComponent, TableFooterTagHelperComponent>();
 
 #region Razor Pages examples
 //builder.Services.AddDistributedMemoryCache();
