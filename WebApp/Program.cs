@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using Newtonsoft.Json;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Razor.TagHelpers;
-using WebApp.TagHelpers;
+//using Microsoft.AspNetCore.Razor.TagHelpers;
+//using WebApp.TagHelpers;
 //using System.Text.Json.Serialization;
 
 const string BASE_URL = "api/products";
@@ -20,8 +20,8 @@ builder.Services.AddDbContext<DataContext>(opts =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 builder.Services.AddSingleton<CitiesData>();
-builder.Services.AddTransient<ITagHelperComponent, TimeTagHelperComponent>();
-builder.Services.AddTransient<ITagHelperComponent, TableFooterTagHelperComponent>();
+//builder.Services.AddTransient<ITagHelperComponent, TimeTagHelperComponent>();
+//builder.Services.AddTransient<ITagHelperComponent, TableFooterTagHelperComponent>();
 
 #region Razor Pages examples
 //builder.Services.AddDistributedMemoryCache();
