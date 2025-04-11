@@ -1,0 +1,45 @@
+﻿@page "/pages/form/{id:long?}"
+@model FormHandlerModel
+@using Microsoft.AspNetCore.Mvc.RazorPages
+
+<div class="m-2">
+    <h5 class="bg-primary text-white text-center m-2">HTML Form</h5>
+    <form action="/pages/form" method="post">
+        <div class="form-group">
+            <label>Name</label>
+            <input class="form-control" name="Name"
+                   value="@Model.Product?.Name" />
+        </div>
+        <button class="btn btn-primary m-2" type="submit">Submit</button>
+    </form>
+</div>
+
+@functions {
+    [IgnoreAntiforgeryToken]
+    public sealed class FormHandlerModel : PageModel
+    {
+        private readonly DataContext _context;
+
+        public Product? Product { get; set; }
+
+        public FormHandlerModel(DataContext dataContext)
+        {
+            _context = dataContext;
+        }
+
+        public async Task OnGetAsync(long id = 1)
+        {
+            Product = await _context.Products.FindAsync(id);
+        }
+
+        public IActionResult OnPost()
+        {
+            foreach (string key in Request.Form.Keys
+                .Where(key => !key.StartsWith("_")))
+            {
+                TempData[key] = string.Join(", ", Request.Form[key].ToArray());
+            }
+            return RedirectToPage("FormResults");
+        }
+    }
+}
