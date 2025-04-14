@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 using WebApp.Models;
 
@@ -15,7 +16,10 @@ namespace WebApp.Controllers
 
         public async Task<IActionResult> Index(long id = 1)
         {
-            return View("Form", await _context.Products.FindAsync(id));
+            return View("Form", await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Supplier)
+                .FirstAsync(p => p.ProductId == id));
         }
 
         [HttpPost]
