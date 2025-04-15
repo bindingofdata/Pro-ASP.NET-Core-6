@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
+using System.Text.Json;
+
 using WebApp.Models;
 
 namespace WebApp.Controllers
@@ -26,12 +28,9 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitForm(string name, decimal price)
+        public IActionResult SubmitForm(Product product)
         {
-            TempData["name param"] = name;
-            // This is bad.
-            // A better option is provided in Chapter 31.
-            TempData["price param"] = price.ToString();
+            TempData["product"] = JsonSerializer.Serialize(product);
             return RedirectToAction(nameof(Results));
         }
 
