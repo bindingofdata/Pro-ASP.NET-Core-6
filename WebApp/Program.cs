@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 using Newtonsoft.Json;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Antiforgery;
 //using Microsoft.AspNetCore.Razor.TagHelpers;
 //using WebApp.TagHelpers;
 //using System.Text.Json.Serialization;
@@ -22,6 +23,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddSingleton<CitiesData>();
 //builder.Services.AddTransient<ITagHelperComponent, TimeTagHelperComponent>();
 //builder.Services.AddTransient<ITagHelperComponent, TableFooterTagHelperComponent>();
+
+builder.Services.Configure<AntiforgeryOptions>(opts =>
+    opts.HeaderName = "X-XSRF-TOKEN");
 
 #region Razor Pages examples
 //builder.Services.AddDistributedMemoryCache();
@@ -65,6 +69,22 @@ builder.Services.AddSingleton<CitiesData>();
 var app = builder.Build();
 
 app.UseStaticFiles();
+
+IAntiforgery antiforgery = app.Services.GetRequiredService<IAntiforgery>();
+app.Use(async (context, next) =>
+{
+    if (!context.Request.Path.StartsWithSegments("/api"))
+    {
+        string? token = antiforgery.GetAndStoreTokens(context).RequestToken;
+        if (token != null)
+        {
+            context.Response.Cookies.Append("XSRF-TOKEN", token,
+                new CookieOptions { HttpOnly = false});
+        }
+    }
+    await next();
+});
+
 //app.MapControllers();
 //app.MapDefaultControllerRoute();
 app.MapControllerRoute("forms", "controllers/{controller=Home}/{action=Index}/{id?}");
