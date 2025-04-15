@@ -14,7 +14,6 @@ namespace WebApp.Models
         public string Name { get; set; } = string.Empty;
 
         [Column(TypeName = "decimal(8, 2)")]
-        [BindNever]
         public decimal Price { get; set; }
 
         public long CategoryId { get; set; }
