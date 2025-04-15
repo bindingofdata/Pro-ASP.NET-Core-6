@@ -12,8 +12,14 @@
             <input class="form-control" asp-for="Product.Name"/>
         </div>
         <div class="form-group">
-        <label>Price</label>
+            <label>Price</label>
             <input class="form-control" asp-for="Product.Price"/>
+        </div>
+        <div class="form-group">
+            <label>Category Name</label>
+            @{ #pragma warning disable CS8602 }
+            <input class="form-control" asp-for="Product.Category.Name"/>
+            @{ #pragma warning restore CS8602 }
         </div>
         <button class="btn btn-primary m-2" type="submit">Submit</button>
     </form>
@@ -26,6 +32,9 @@
 
         [BindProperty]
         public Product? Product { get; set; }
+
+        [BindProperty(Name = "Product.Category")]
+        public Category Category { get; set; } = new();
 
         public FormHandlerModel(DataContext dataContext)
         {
@@ -43,6 +52,7 @@
         public IActionResult OnPost()
         {
             TempData["product"] = JsonSerializer.Serialize(Product);
+            TempData["category"] = JsonSerializer.Serialize(Category);
             return RedirectToPage("FormResults");
         }
     }
