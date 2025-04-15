@@ -26,12 +26,12 @@ namespace WebApp.Controllers
         }
 
         [HttpPost]
-        public IActionResult SubmitForm()
+        public IActionResult SubmitForm(string name, decimal price)
         {
-            foreach (string key in Request.Form.Keys)
-            {
-                TempData[key] = string.Join(", ", Request.Form[key].ToArray());
-            }
+            TempData["name param"] = name;
+            // This is bad.
+            // A better option is provided in Chapter 31.
+            TempData["price param"] = price.ToString();
             return RedirectToAction(nameof(Results));
         }
 
