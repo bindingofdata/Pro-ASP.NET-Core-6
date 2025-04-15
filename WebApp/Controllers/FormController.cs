@@ -6,6 +6,7 @@ using WebApp.Models;
 
 namespace WebApp.Controllers
 {
+    [AutoValidateAntiforgeryToken]
     public sealed class FormController : Controller
     {
         private readonly DataContext _context;
