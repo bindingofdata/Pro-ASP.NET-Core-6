@@ -21,11 +21,11 @@ namespace WebApp.Controllers
         public async Task<IActionResult> Index(long? id)
         {
             return View("Form", await _context.Products
-                .FirstOrDefaultAsync(p => p.ProductId == id));
+                .FirstOrDefaultAsync(p => id == null || p.ProductId == id));
         }
 
         [HttpPost]
-        public IActionResult SubmitForm([Bind("Name", "Category")]Product product)
+        public IActionResult SubmitForm(Product product)
         {
             if (ModelState.IsValid)
             {
