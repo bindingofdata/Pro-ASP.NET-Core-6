@@ -18,12 +18,9 @@ namespace WebApp.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index(long id)
+        public async Task<IActionResult> Index(long? id)
         {
-            ViewBag.Categories = new SelectList(_context.Categories, "CategoryId", "Name");
             return View("Form", await _context.Products
-                .Include(p => p.Category)
-                .Include(p => p.Supplier)
                 .FirstOrDefaultAsync(p => p.ProductId == id));
         }
 
@@ -32,7 +29,8 @@ namespace WebApp.Controllers
         {
             TempData["name"] = product.Name;
             TempData["price"] = product.Price.ToString();
-            TempData["category name"] = product.Category?.Name;
+            TempData["categoryId"] = product.CategoryId.ToString();
+            TempData["supplierId"] = product.SupplierId.ToString();
             return RedirectToAction(nameof(Results));
         }
 
