@@ -4,6 +4,7 @@ using WebApp.Models;
 using Newtonsoft.Json;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Mvc;
 //using Microsoft.AspNetCore.Razor.TagHelpers;
 //using WebApp.TagHelpers;
 //using System.Text.Json.Serialization;
@@ -26,6 +27,9 @@ builder.Services.AddSingleton<CitiesData>();
 
 builder.Services.Configure<AntiforgeryOptions>(opts =>
     opts.HeaderName = "X-XSRF-TOKEN");
+
+builder.Services.Configure<MvcOptions>(opts => opts.ModelBindingMessageProvider
+    .SetValueMustNotBeNullAccessor(value => "Please enter a value."));
 
 #region Razor Pages examples
 //builder.Services.AddDistributedMemoryCache();
