@@ -30,10 +30,10 @@ namespace WebApp.Controllers
         {
             bool priceIsValid = ModelState.GetValidationState(nameof(Product.Price))
                     == ModelValidationState.Valid;
-            if (priceIsValid && product.Price <= 0)
-            {
-                ModelState.AddModelError(nameof(product.Price), "Enter a positive price.");
-            }
+            //if (priceIsValid && product.Price <= 0)
+            //{
+            //    ModelState.AddModelError(nameof(product.Price), "Enter a positive price.");
+            //}
             if (priceIsValid
                 && ModelState.GetValidationState(nameof(Product.Name))
                     == ModelValidationState.Valid
