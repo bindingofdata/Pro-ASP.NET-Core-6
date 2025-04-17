@@ -4,6 +4,9 @@
 @using Microsoft.AspNetCore.Mvc.RazorPages
 @using Microsoft.EntityFrameworkCore
 @using System.Text.Json
+@using WebApp.Validation
+
+<partial name="_Validation"/>
 
 <div class="m-2">
     <h5 class="bg-primary text-white text-center m-2">HTML Form</h5>
@@ -63,32 +66,6 @@
 
         public IActionResult OnPost()
         {
-            bool priceIsValid = ModelState.GetValidationState("Product.Price") == ModelValidationState.Valid;
-            if (priceIsValid && Product?.Price < 1)
-            {
-                ModelState.AddModelError("Product.Price", "Enter positive price");
-            }
-
-            if (priceIsValid
-                && ModelState.GetValidationState("Product.Name") == ModelValidationState.Valid
-                && Product.Name.StartsWith("small", StringComparison.OrdinalIgnoreCase)
-                && Product.Price > 100)
-            {
-                ModelState.AddModelError("", "Small products cannot cost more than 100");
-            }
-
-            if (ModelState.GetValidationState("Product.CategoryId") == ModelValidationState.Valid
-                && !_context.Categories.Any(cat => cat.CategoryId == Product.CategoryId))
-            {
-                ModelState.AddModelError("Product.CategoryId", "Enter an existing Category Id");
-            }
-
-            if (ModelState.GetValidationState("Product.SupplierId") == ModelValidationState.Valid
-                && !_context.Suppliers.Any(sup => sup.SupplierId == Product.SupplierId))
-            {
-                ModelState.AddModelError("Product.SupplierId", "Enter an existing Supplier Id");
-            }
-
             if (ModelState.IsValid)
             {
                 TempData["name"] = Product?.Name;
@@ -99,6 +76,7 @@
             }
             else
             {
+                ModelState.PromotePropertyErrors(nameof(Product));
                 return Page();
             }
         }
