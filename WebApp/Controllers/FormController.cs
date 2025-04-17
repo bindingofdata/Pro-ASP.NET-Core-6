@@ -28,35 +28,6 @@ namespace WebApp.Controllers
         [HttpPost]
         public IActionResult SubmitForm(Product product)
         {
-            bool priceIsValid = ModelState.GetValidationState(nameof(Product.Price))
-                    == ModelValidationState.Valid;
-            //if (priceIsValid && product.Price <= 0)
-            //{
-            //    ModelState.AddModelError(nameof(product.Price), "Enter a positive price.");
-            //}
-            if (priceIsValid
-                && ModelState.GetValidationState(nameof(Product.Name))
-                    == ModelValidationState.Valid
-                && product.Name.StartsWith("small", StringComparison.OrdinalIgnoreCase)
-                && product.Price > 100)
-            {
-                ModelState.AddModelError("", "Small products cannot cost more than $100.");
-            }
-
-            if (ModelState.GetValidationState(nameof(Product.CategoryId))
-                    == ModelValidationState.Valid && !_context.Categories.Any(c =>
-                        c.CategoryId == product.CategoryId))
-            {
-                ModelState.AddModelError(nameof(product.CategoryId), "Enter an existing Category Id.");
-            }
-
-            if (ModelState.GetValidationState(nameof(Product.SupplierId))
-                    == ModelValidationState.Valid && !_context.Suppliers.Any(s =>
-                        s.SupplierId == product.SupplierId))
-            {
-                ModelState.AddModelError(nameof(product.SupplierId), "Enter an existing Supplier Id.");
-            }
-
             if (ModelState.IsValid)
             {
                 TempData["name"] = product.Name;

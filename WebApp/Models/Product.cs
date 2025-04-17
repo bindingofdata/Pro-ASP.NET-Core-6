@@ -4,9 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
+using WebApp.Validation;
+
 
 namespace WebApp.Models
 {
+    [PhraseAndPrice(Phrase = "Small", Price = "100")]
     public sealed class Product
     {
         public long ProductId { get; set; }
@@ -18,10 +21,11 @@ namespace WebApp.Models
         [Column(TypeName = "decimal(8, 2)")]
         public decimal Price { get; set; }
 
+        [PrimaryKey(ContextType = typeof(DataContext), DataType = typeof(Category))]
         public long CategoryId { get; set; }
-
         public Category? Category { get; set; }
 
+        [PrimaryKey(ContextType = typeof(DataContext), DataType = typeof(Supplier))]
         public long SupplierId { get; set; }
         // prevent specific property from being serialized when null
         //[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
