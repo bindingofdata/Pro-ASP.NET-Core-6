@@ -21,6 +21,7 @@ else if (Model.Message is IDictionary<string,string>)
 }
 
 @functions {
+    [RequireHttps]
     public sealed class MessageModel : PageModel
     {
         public object Message { get; set; } = "This is a Message Razor Page";
