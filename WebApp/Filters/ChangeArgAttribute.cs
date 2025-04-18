@@ -2,9 +2,9 @@
 
 namespace WebApp.Filters
 {
-    public sealed class ChangeArgAttribute : Attribute, IAsyncActionFilter
+    public sealed class ChangeArgAttribute : ActionFilterAttribute
     {
-        public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
+        public override async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
             if (context.ActionArguments.ContainsKey("message1"))
             {
