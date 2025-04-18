@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
+using WebApp.Filters;
+
 namespace WebApp.Controllers
 {
-    [RequireHttps]
+    [HttpsOnly]
     public sealed class HomeController : Controller
     {
         //[RequireHttps]
