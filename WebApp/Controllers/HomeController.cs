@@ -6,6 +6,7 @@ using WebApp.Filters;
 namespace WebApp.Controllers
 {
     [HttpsOnly]
+    [ResultDiagnostics]
     public sealed class HomeController : Controller
     {
         //[RequireHttps]
