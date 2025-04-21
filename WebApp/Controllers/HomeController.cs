@@ -7,6 +7,8 @@ namespace WebApp.Controllers
 {
     [HttpsOnly]
     [ResultDiagnostics]
+    [GuidResponse]
+    [GuidResponse]
     public sealed class HomeController : Controller
     {
         //[RequireHttps]
