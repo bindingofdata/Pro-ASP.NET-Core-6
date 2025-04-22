@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Mvc;
+using WebApp.Filters;
 //using Microsoft.AspNetCore.Razor.TagHelpers;
 //using WebApp.TagHelpers;
 //using System.Text.Json.Serialization;
@@ -18,6 +19,8 @@ builder.Services.AddDbContext<DataContext>(opts =>
 });
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
+builder.Services.AddScoped<GuidResponseAttribute>();
 
 var app = builder.Build();
 
