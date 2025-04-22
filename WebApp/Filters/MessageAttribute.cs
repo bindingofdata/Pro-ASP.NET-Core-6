@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 namespace WebApp.Filters
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class MessageAttribute : Attribute, IAsyncAlwaysRunResultFilter
+    public sealed class MessageAttribute : Attribute, IAsyncAlwaysRunResultFilter, IOrderedFilter
     {
         private int _counter = 0;
         private string _message;
+
+        public int Order { get; set; }
 
         public MessageAttribute(string message) => _message = message;
 
