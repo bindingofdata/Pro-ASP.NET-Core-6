@@ -6,10 +6,17 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 namespace WebApp.Filters
 {
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = true)]
-    public sealed class GuidResponseAttribute : Attribute, IAsyncAlwaysRunResultFilter
+    public sealed class GuidResponseAttribute : Attribute, IAsyncAlwaysRunResultFilter, IFilterFactory
     {
         private int _counter = 0;
         private string _guid = Guid.NewGuid().ToString();
+
+        public bool IsReusable => false;
+
+        public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)
+        {
+            return ActivatorUtilities.GetServiceOrCreateInstance<GuidResponseAttribute>(serviceProvider);
+        }
 
         public Task OnResultExecutionAsync(ResultExecutingContext context, ResultExecutionDelegate next)
         {
