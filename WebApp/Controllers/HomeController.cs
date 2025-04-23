@@ -1,18 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.EntityFrameworkCore;
 
-using WebApp.Filters;
+using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-    [Message("This is the controller-scoped filter", Order = 10)]
+    [AutoValidateAntiforgeryToken]
     public sealed class HomeController : Controller
     {
-        [Message("This is the first action-scoped filter", Order = 1)]
-        [Message("This is the second action-scoped filter", Order = -1)]
+        private readonly DataContext _dataContext;
+
+        private IEnumerable<Category> _categories => _dataContext.Categories;
+        private IEnumerable<Supplier> _suppliers => _dataContext.Suppliers;
+
+        public HomeController(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
+
         public IActionResult Index()
         {
-            return View("Message", "This is the Index action on the Home controller.");
+            return View(_dataContext.Products
+                .Include(p => p.Category)
+                .Include(p => p.Supplier));
         }
     }
 }
