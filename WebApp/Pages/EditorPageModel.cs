@@ -4,7 +4,7 @@ using WebApp.Models;
 
 namespace WebApp.Pages
 {
-    public sealed class EditorPageModel : PageModel
+    public class EditorPageModel : PageModel
     {
         public DataContext DataContext { get; set; }
 
