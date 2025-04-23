@@ -90,6 +90,26 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Delete(long id)
+        {
+            Product? product = await _dataContext.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            ProductViewModel model = ViewModelFactory.Delete(product, _categories, _suppliers);
+            return View(PRODUCT_EDITOR_STRING, model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Product product)
+        {
+            _dataContext.Products.Remove(product);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         private const string PRODUCT_EDITOR_STRING = "ProductEditor";
     }
 }
