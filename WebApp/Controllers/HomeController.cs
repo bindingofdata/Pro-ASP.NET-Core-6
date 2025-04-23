@@ -60,6 +60,36 @@ namespace WebApp.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public async Task<IActionResult> Edit(long id)
+        {
+            Product? product = await _dataContext.Products.FindAsync(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            ProductViewModel model =
+                ViewModelFactory.Edit(product, _categories, _suppliers);
+
+            return View(PRODUCT_EDITOR_STRING, model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit([FromForm] Product product)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(PRODUCT_EDITOR_STRING,
+                    ViewModelFactory.Edit(product, _categories, _suppliers));
+            }
+
+            product.Category = default;
+            product.Supplier = default;
+            _dataContext.Products.Update(product);
+            await _dataContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
         private const string PRODUCT_EDITOR_STRING = "ProductEditor";
     }
 }
