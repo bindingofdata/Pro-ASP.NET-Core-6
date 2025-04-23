@@ -24,5 +24,17 @@ namespace WebApp.Controllers
                 .Include(p => p.Category)
                 .Include(p => p.Supplier));
         }
+
+        public async Task<IActionResult> Details(long id)
+        {
+            Product? product = await _dataContext.Products
+                .Include(p => p.Category)
+                .Include(p => p.Supplier)
+                .FirstOrDefaultAsync(p => p.ProductId == id)
+                ?? new Product();
+
+            ProductViewModel model = ViewModelFactory.Details(product);
+            return View("ProductEditor", model);
+        }
     }
 }
