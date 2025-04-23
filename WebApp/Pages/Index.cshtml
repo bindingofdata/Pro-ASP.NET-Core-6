@@ -1,0 +1,57 @@
+﻿@page "/pages/{id:long?}"
+@model IndexModel
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@using Microsoft.EntityFrameworkCore
+
+<div class="m-2">
+    <h4 class="bg-primary text-white text-center p-2">Products</h4>
+    <table class="table table-sm table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th><th>Name</th><th>Price</th><th>Category</th><th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Product product in Model.Products)
+            {
+                <tr>
+                    <td>@product.ProductId</td>
+                    <td>@product.Name</td>
+                    <td>@product.Price</td>
+                    <td>@product.Category?.Name</td>
+                    <td class="text-center">
+                        <a asp-page="Details" asp-rout-id="@product.ProductId"
+                            class="btn btn-sm btn-info">Details</a>
+                        <a asp-page="Edit" asp-rout-id="@product.ProductId"
+                           class="btn btn-sm btn-warning">Edit</a>
+                        <a asp-page="Delete" asp-rout-id="@product.ProductId"
+                           class="btn btn-sm btn-danger">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a asp-page="Create" class="btn btn-primary">Create</a>
+</div>
+
+@functions {
+    public sealed class IndexModel : PageModel
+    {
+        private readonly DataContext _context;
+
+        public IndexModel(DataContext dataContext)
+        {
+            _context = dataContext;
+        }
+
+        public IEnumerable<Product> Products { get; set; }
+             = Enumerable.Empty<Product>();
+
+        public void OnGetAsync(long id = 1)
+        {
+            Products = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Supplier);
+        }
+    }
+}
