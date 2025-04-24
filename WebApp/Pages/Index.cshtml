@@ -20,11 +20,11 @@
                     <td>@product.Price</td>
                     <td>@product.Category?.Name</td>
                     <td class="text-center">
-                        <a asp-page="Details" asp-rout-id="@product.ProductId"
+                        <a asp-page="Details" asp-route-id="@product.ProductId"
                             class="btn btn-sm btn-info">Details</a>
-                        <a asp-page="Edit" asp-rout-id="@product.ProductId"
+                        <a asp-page="Edit" asp-route-id="@product.ProductId"
                            class="btn btn-sm btn-warning">Edit</a>
-                        <a asp-page="Delete" asp-rout-id="@product.ProductId"
+                        <a asp-page="Delete" asp-route-id="@product.ProductId"
                            class="btn btn-sm btn-danger">Delete</a>
                     </td>
                 </tr>
