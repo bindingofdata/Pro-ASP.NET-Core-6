@@ -17,5 +17,18 @@ namespace WebApp.Pages
         {
             DataContext = dataContext;
         }
+
+        protected async Task CheckNewCategory(Product product)
+        {
+            if (product.CategoryId == -1
+                    && !string.IsNullOrWhiteSpace(product.Category?.Name))
+            {
+                DataContext.Categories.Add(product.Category);
+                await DataContext.SaveChangesAsync();
+                product.CategoryId = product.Category.CategoryId;
+                ModelState.Clear();
+                TryValidateModel(product);
+            }
+        }
     }
 }
