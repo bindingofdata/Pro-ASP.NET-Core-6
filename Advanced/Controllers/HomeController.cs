@@ -2,8 +2,7 @@
 using Advanced.ViewModels;
 
 using Microsoft.AspNetCore.Mvc;
-
-using System.Data.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Advanced.Controllers
 {
