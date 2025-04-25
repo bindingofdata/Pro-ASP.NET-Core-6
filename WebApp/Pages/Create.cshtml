@@ -12,7 +12,10 @@
 
         public void OnGet()
         {
-            ViewModel = ViewModelFactory.Create(new Product(), Categories, Suppliers);
+            Product product = TempData.ContainsKey("product")
+                ? JsonSerializer.Deserialize<Product>((TempData["product"] as string)!)!
+                : new Product();
+            ViewModel = ViewModelFactory.Create(product, Categories, Suppliers);
         }
 
         public async Task<IActionResult> OnPostAsync([FromForm]Product product)

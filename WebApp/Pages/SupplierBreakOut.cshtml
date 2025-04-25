@@ -1,0 +1,71 @@
+﻿@page "/pages/supplier"
+@model SupplierPageModel
+
+<div class="m-2">
+    <h5 class="bg-secondary text-white text-center p-2">New Supplier</h5>
+    <form asp-page="SupplierBreakOut" method="post">
+        <div class="form-group">
+            @{ #pragma warning disable CS8602 }
+            <label asp-for="Supplier.Name"></label>
+            <input class="form-control" asp-for="Supplier.Name"/>
+            @{ #pragma warning restore cs8602 }
+        </div>
+        <div class="form-group">
+            @{ #pragma warning disable CS8602 }
+            <label asp-for="Supplier.City"></label>
+            <input class="form-control" asp-for="Supplier.City"/>
+            @{ #pragma warning restore cs8602 }
+        </div>
+        <button class="btn btn-secondary mt-2" type="submit">Create</button>
+        <a class="btn btn-outline-secondary mt-2"
+        asp-page="@Model?.ReturnPage" asp-route-id="@Model?.ProductId">
+            Cancel
+        </a>
+    </form>
+</div>
+
+@functions {
+    public sealed class SupplierPageModel : PageModel
+    {
+        private readonly DataContext _context;
+
+        [BindProperty]
+        public Supplier? Supplier { get; set; }
+        public string? ReturnPage { get; set; }
+        public string? ProductId { get; set; }
+
+        public void OnGet([FromQuery(Name="Product")]Product product, string returnPage)
+        {
+            TempData[PRODUCT_STRING] = Serialize(product);
+            TempData[RETURN_ACTION_STRING] = ReturnPage = returnPage;
+            TempData[PRODUCT_ID_STRING] = ProductId = product.ProductId.ToString();
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (ModelState.IsValid && Supplier != null)
+            {
+                _context.Suppliers.Add(Supplier);
+                await _context.SaveChangesAsync();
+                Product? product = Deserialize(TempData[PRODUCT_STRING] as string);
+                if (product != null)
+                {
+                    product.SupplierId = Supplier.SupplierId;
+                    TempData[PRODUCT_STRING] = Serialize(product);
+                    string? id = TempData[PRODUCT_ID_STRING] as string;
+                    return RedirectToPage(TempData[RETURN_ACTION_STRING] as string, new { id = id });
+                }
+            }
+
+            return Page();
+        }
+
+        private string Serialize(Product product) => JsonSerializer.Serialize(product);
+        private Product? Deserialize(string? json) =>
+            string.IsNullOrWhiteSpace(json) ? null : JsonSerializer.Deserialize<Product>(json);
+
+        private const string PRODUCT_STRING = "product";
+        private const string PRODUCT_ID_STRING = "productId";
+        private const string RETURN_ACTION_STRING = "returnAction";
+    }
+}
