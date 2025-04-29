@@ -9,8 +9,8 @@
         {
             <tr class="@GetClass(p?.Location?.City)">
                 <td>@p?.PersonId</td>
-                <td>@p?.Surname, @p.FirstName</td>
-                <td>@p?.Department</td>
+                <td>@p?.Surname, @p?.FirstName</td>
+                <td>@p?.Department?.Name</td>
                 <td>@p?.Location?.City, @p?.Location?.State</td>
             </tr>
         }
@@ -23,7 +23,7 @@
         <option disabled selected value="">Select City</option>
         @foreach (string city in Cities ?? Enumerable.Empty<string>())
         {
-            <option value="city" selected="@(city == SelectedCity)">
+            <option value="@city" selected="@(city == SelectedCity)">
                 @city
             </option>
         }
