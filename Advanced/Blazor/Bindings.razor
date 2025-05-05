@@ -2,7 +2,10 @@
     <label>City:</label>
     @* Example of a basic way of updating data from an input. *@
     @* <input class="form-control" value="@City" @onchange="UpdateCity"/> *@
-    <input class="form-control" @bind="City"/>
+    @* Example of basic data binding. *@
+    @* <input class="form-control" @bind="City"/> *@
+    @* Example of specifying binding event. *@
+    <input class="form-control" @bind-value="City" @bind-value:event="oninput"/>
 </div>
 <div class="p-2 mb-2">City Value: @City</div>
 <button class="btn btn-primary" @onclick="@(() => City = "Paris")">Paris</button>
