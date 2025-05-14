@@ -17,8 +17,7 @@
     </tbody>
 </table>
 
-<SelectFilter Values="@Cities" Title="City" autofocus="true" name="city"
-    required="true"/>
+<SelectFilter Values="@Cities" Title="@SelectTitle"/>
 
 @code {
     [Inject]
@@ -26,7 +25,8 @@
 
     public IEnumerable<Person>? People => Context?.People
         .Include(p => p.Department)
-        .Include(p => p.Location);
+        .Include(p => p.Location)
+        .Take(ItemCount);
 
     public IEnumerable<string>? Cities => Context?.Locations
         .Select(l => l.City);
@@ -35,4 +35,10 @@
 
     public string GetClass(string? city) =>
         SelectedCity == city ? "bg-info text-white" : string.Empty;
+
+    [Parameter]
+    public int ItemCount { get; set; }
+
+    [Parameter]
+    public string? SelectTitle { get; set; }
 }
