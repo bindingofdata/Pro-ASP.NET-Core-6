@@ -1,10 +1,8 @@
-﻿<table class="table table-sm table-striped table-bordered">
-    <thead>
-        <tr>
-            <th>ID</th><th>Name</th><th>Dept</th><th>Location</th>
-        </tr>
-    </thead>
-    <tbody>
+﻿<TableTemplate>
+    <Header>
+        <tr><th>ID</th><th>Name</th><th>Dept</th><th>Location</th></tr>
+    </Header>
+    <Body>
         @foreach (Person p in People ?? Enumerable.Empty<Person>())
         {
             <tr class="@GetClass(p?.Location?.City)">
@@ -14,8 +12,8 @@
                 <td>@p?.Location?.City, @p?.Location?.State</td>
             </tr>
         }
-    </tbody>
-</table>
+    </Body>
+</TableTemplate>
 
 <ThemeWrapper Theme="info" Title="Location Selector">
     <SelectFilter Values="@Cities" Title="@SelectTitle" @bind-SelectedValue="SelectedCity" />
@@ -47,9 +45,4 @@
 
     [Parameter]
     public string? SelectTitle { get; set; }
-
-    // public void HandleCustom(string newValue)
-    // {
-    //     SelectedCity = newValue;
-    // }
 }
