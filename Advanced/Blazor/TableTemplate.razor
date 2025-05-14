@@ -1,9 +1,19 @@
-﻿<table class="table table-sm table-striped table-bordered">
+﻿@typeparam RowType
+
+<table class="table table-sm table-striped table-bordered">
     @if(Header != null)
     {
         <thead>@Header</thead>
     }
-    <tbody>@Body</tbody>
+    <tbody>
+        @if(RowData != null && RowTemplate != null)
+        {
+            @foreach (RowType item in RowData)
+            {
+                <tr>@RowTemplate(item)</tr>
+            }
+        }
+    </tbody>
 </table>
 
 @code {
@@ -11,5 +21,8 @@
     public RenderFragment? Header { get; set; }
 
     [Parameter]
-    public RenderFragment? Body { get; set; }
+    public RenderFragment<RowType>? RowTemplate { get; set; }
+
+    [Parameter]
+    public IEnumerable<RowType>? RowData { get; set; }
 }

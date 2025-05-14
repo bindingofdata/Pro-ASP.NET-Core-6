@@ -1,27 +1,14 @@
-﻿<TableTemplate>
+﻿<TableTemplate RowType="Person" RowData="People">
     <Header>
         <tr><th>ID</th><th>Name</th><th>Dept</th><th>Location</th></tr>
     </Header>
-    <Body>
-        @foreach (Person p in People ?? Enumerable.Empty<Person>())
-        {
-            <tr class="@GetClass(p?.Location?.City)">
-                <td>@p?.PersonId</td>
-                <td>@p?.Surname, @p?.FirstName</td>
-                <td>@p?.Department?.Name</td>
-                <td>@p?.Location?.City, @p?.Location?.State</td>
-            </tr>
-        }
-    </Body>
+    <RowTemplate Context="p">
+        <td>@p?.PersonId</td>
+        <td>@p?.Surname, @p?.FirstName</td>
+        <td>@p?.Department?.Name</td>
+        <td>@p?.Location?.City, @p?.Location?.State</td>
+    </RowTemplate>
 </TableTemplate>
-
-<ThemeWrapper Theme="info" Title="Location Selector">
-    <SelectFilter Values="@Cities" Title="@SelectTitle" @bind-SelectedValue="SelectedCity" />
-
-    <button class="btn btn-primary mt-2" @onclick="@(() => SelectedCity = "Oakland")">
-        Change
-    </button>
-</ThemeWrapper>
 
 @code {
     [Inject]
@@ -29,20 +16,5 @@
 
     public IEnumerable<Person>? People => Context?.People
         .Include(p => p.Department)
-        .Include(p => p.Location)
-        .Take(ItemCount);
-
-    public IEnumerable<string>? Cities => Context?.Locations
-        .Select(l => l.City);
-
-    public string SelectedCity { get; set; } = string.Empty;
-
-    public string GetClass(string? city) =>
-        SelectedCity == city ? "bg-info text-white" : string.Empty;
-
-    [Parameter]
-    public int ItemCount { get; set; }
-
-    [Parameter]
-    public string? SelectTitle { get; set; }
+        .Include(p => p.Location);
 }
