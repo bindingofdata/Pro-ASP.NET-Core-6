@@ -31,6 +31,11 @@
     public async Task HandleSelect(ChangeEventArgs e)
     {
         SelectedValue = e.Value as string;
+        // added for Handling Uncaught Application Errors example
+        if (string.Equals(SelectedValue, "Sales"))
+        {
+            throw new Exception("Sales cannot be selected");
+        }
         await SelectedValueChanged.InvokeAsync(SelectedValue);
     }
 
