@@ -9,15 +9,21 @@
                 @bind-SelectedValue="SortDirectionSelection"/>
         </div>
         <div class="col">
-            <ErrorBoundary>
+            <ErrorBoundary @ref="boundary">
                 <ChildContent>
                     <SelectFilter Title="@("Highlight")" Values="@HighlightChoices()"
                         @bind-SelectedValue="HighlightSelection" />
                 </ChildContent>
                 <ErrorContent>
-                    <h4 class="bg-danger text-white text-center h-100 p-2">
+                    <h6 class="bg-danger text-white text-center h-100 p-2">
                         Inline Error: Sales Selected
-                    </h4>
+                        <div>
+                            <button class="btn btn-light btn-sm m-1"
+                                @onclick="@(() => boundary?.Recover())">
+                                Recover
+                            </button>
+                        </div>
+                    </h6>
                 </ErrorContent>
             </ErrorBoundary>
         </div>
@@ -41,6 +47,8 @@
 </table>
 
 @code {
+    ErrorBoundary? boundary;
+
     [Parameter]
     public RenderFragment? Header { get; set; }
 
