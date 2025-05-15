@@ -1,5 +1,7 @@
 ﻿@typeparam RowType
 
+<link rel="stylesheet" href="errorBoundaries.css"/>
+
 <div class="container-fluid">
     <div class="row p-2">
         <div class="col">
@@ -7,8 +9,10 @@
                 @bind-SelectedValue="SortDirectionSelection"/>
         </div>
         <div class="col">
-            <SelectFilter Title="@("Highlight")" Values="@HighlightChoices()"
-                @bind-SelectedValue="HighlightSelection"/>
+            <ErrorBoundary>
+                <SelectFilter Title="@("Highlight")" Values="@HighlightChoices()"
+                    @bind-SelectedValue="HighlightSelection" />
+            </ErrorBoundary>
         </div>
     </div>
 </div>
