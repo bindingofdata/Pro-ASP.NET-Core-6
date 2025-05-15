@@ -1,4 +1,4 @@
-﻿<div class="form-group">
+﻿<div class="form-group p-2 bg-@Theme @TextColor()">
     <label for="select-@Title">@Title</label>
     <select name="select-@Title" class="form-control"
             @onchange="HandleSelect" value="@SelectedValue">
@@ -33,4 +33,10 @@
         SelectedValue = e.Value as string;
         await SelectedValueChanged.InvokeAsync(SelectedValue);
     }
+
+    [CascadingParameter(Name = "BgTheme")]
+    public string Theme { get; set; } = "";
+
+    public string TextColor() => string.IsNullOrWhiteSpace(Theme)
+        ? "text-dark" : "text-light";
 }
